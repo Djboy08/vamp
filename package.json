@@ -1,0 +1,21 @@
+{
+  "name": "TestGame2",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@rbxts/types": "^1.0.317"
+  },
+  "dependencies": {
+    "@rbxts/object-composer": "^1.0.1",
+    "@rbxts/resources": "0.0.18",
+    "@rbxts/services": "^1.0.3",
+    "@rbxts/t": "^1.2.6"
+  }
+}
