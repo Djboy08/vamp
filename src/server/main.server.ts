@@ -9,7 +9,8 @@ traits.add("isRegenerator");
 
 Players.PlayerAdded.Connect((p: Player)=>{
     let composition = buildRace(race, traits, p);
-    composition.
+    // composition.compulse()
+    // composition.compulse()
 })
 
 

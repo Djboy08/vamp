@@ -1,22 +1,24 @@
 import compose from "@rbxts/object-composer";
 import * as races from "shared/races"
 
-interface mapping {
-    [key: string]: unknown
-}
-let map: mapping = {};
-map["isFeeder"] = races.isFeeder
-map["isCombatter"] = races.isCombatter
-map["isCompulser"] = races.isCompulser
-map["isPerson"] = races.isPerson
-map["isRegenerator"] = races.isRegenerator
-map["isVampire"] = races.isVampire
+let map = new Map<string, unknown>();
+map.set("isFeeder", races.isFeeder)
+map.set("isCombatter", races.isCombatter)
+map.set("isCompulser", races.isCompulser)
+map.set("isPerson", races.isPerson)
+map.set("isRegenerator", races.isRegenerator)
+map.set("isVampire", races.isVampire)
 
-export const buildRace = (race: keyof typeof races, s: Set<string>, player: Player) =>{
 
-    return compose(
-        races[race],
-        races.isPerson,
+export const buildRace = (race: string, s: Set<string>, player: Player) =>{
+    if(map.has(race)){
+        const x = map.get(race)
+        return compose(races.isPerson)({player})
+    }
+    // return compose(
+
+    //     races.isPerson,
         
-    )({player});
+    // )({player});
 }
+
