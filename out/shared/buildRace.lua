@@ -1,20 +1,16 @@
 -- Compiled with https://roblox-ts.github.io v0.2.14
--- January 16, 2020, 12:07 AM Eastern Standard Time
+-- January 16, 2020, 5:51 PM Eastern Standard Time
 
 local TS = require(game:GetService("ReplicatedStorage"):WaitForChild("rbxts_include"):WaitForChild("RuntimeLib"));
 local exports = {};
-local compose = TS.import(TS.getModule("object-composer")).default;
+local buildRace;
+local compose = TS.import(TS.getModule("object-composer")).compose;
 local races = TS.import(game:GetService("ReplicatedStorage"), "TS", "races");
-local map = {};
-map["isFeeder"] = races.isFeeder;
-map["isCombatter"] = races.isCombatter;
-map["isCompulser"] = races.isCompulser;
-map["isPerson"] = races.isPerson;
-map["isRegenerator"] = races.isRegenerator;
-map["isVampire"] = races.isVampire;
-local buildRace = function(race, s, player)
-	local x = races[race];
-	return compose(races[race], races.isPerson)({
+function buildRace(player, ...)
+	local raceNames = { ... };
+	return compose(races.isPerson, unpack(TS.array_map(raceNames, function(r)
+		return races[r];
+	end)))({
 		player = player;
 	});
 end;

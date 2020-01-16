@@ -3,15 +3,15 @@ import * as races from "shared/races"
 import { buildRace } from "shared/buildRace";
 import { Workspace, Players, ReplicatedStorage } from "@rbxts/services";
 
-const race = "isCompulser";
-let traits: Set<string> = new Set()
-traits.add("isRegenerator");
+Players.PlayerAdded.Connect(plr => {
+    let x = buildRace(plr, "isCompulser","isCombatter", "isFeeder");
 
-Players.PlayerAdded.Connect((p: Player)=>{
-    let composition = buildRace(race, traits, p);
-    // composition.compulse()
-    // composition.compulse()
-})
+    if("compulse" in x){
+        // We know they are a compulser.
+        
+    }
+});
+
 
 
 

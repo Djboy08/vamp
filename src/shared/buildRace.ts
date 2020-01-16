@@ -1,24 +1,21 @@
-import compose from "@rbxts/object-composer";
-import * as races from "shared/races"
+import { compose, ComposeTuple } from "@rbxts/object-composer";
+import * as races from "shared/races";
+import { Players } from "@rbxts/services";
 
-interface mapping {
-    [key: string]: unknown
+type RaceNames = Exclude<keyof typeof races, "isPerson">;
+type Racify<T extends Array<RaceNames>> = {
+    [K in keyof T]: T[K] extends keyof typeof races ? typeof races[T[K]] : never;
+};
+
+/** Constructs a new race from a given set of strings for player.
+ * @param player The player for whom we are building a new race.
+ * @param raceNames The name of a race which player is to be a member of.
+ */
+export function buildRace<T extends Array<RaceNames>>(
+    player: Player,
+    ...raceNames: T
+): ReturnType<ComposeTuple<Racify<T>>>;
+export function buildRace(player: Player, ...raceNames: Array<RaceNames>) {
+    return compose(races.isPerson, ...raceNames.map(r => races[r]))({ player });
 }
-let map = new Map<string, unknown>();
-map.set("isFeeder", races.isFeeder)
-map.set("isCombatter", races.isCombatter)
-map.set("isCompulser", races.isCompulser)
-map.set("isPerson", races.isPerson)
-map.set("isRegenerator", races.isRegenerator)
-map.set("isVampire", races.isVampire)
 
-
-export const buildRace = (race: keyof typeof races, s: Set<string>, player: Player) =>{
-    const x = races[race]
-    type X = typeof x;
-    return compose(
-        races[race],
-        races.isPerson,
-        
-    )({player});
-}
