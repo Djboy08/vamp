@@ -1,5 +1,5 @@
 -- Compiled with https://roblox-ts.github.io v0.2.14
--- January 15, 2020, 7:09 PM Eastern Standard Time
+-- January 16, 2020, 12:07 AM Eastern Standard Time
 
 local TS = require(game:GetService("ReplicatedStorage"):WaitForChild("rbxts_include"):WaitForChild("RuntimeLib"));
 local races = TS.import(game:GetService("ReplicatedStorage"), "TS", "races");
