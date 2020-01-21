@@ -1,5 +1,5 @@
 -- Compiled with https://roblox-ts.github.io v0.2.14
--- January 15, 2020, 5:06 PM Eastern Standard Time
+-- January 21, 2020, 6:05 PM Eastern Standard Time
 
 local TS = require(game:GetService("ReplicatedStorage"):WaitForChild("rbxts_include"):WaitForChild("RuntimeLib"));
 local exports = {};
@@ -7,9 +7,8 @@ local compose = TS.import(TS.getModule("object-composer")).default;
 local isFeeder = function()
 	local _0 = {};
 	_0.hunger = 100;
-	function _0:feed(npc)
-		self.hunger = self.hunger - 1;
-		print("Feeding on " .. npc.Name);
+	function _0:feed()
+		print("feed");
 	end;
 	return _0;
 end;
@@ -21,8 +20,8 @@ local isPerson = function(_0)
 end;
 local isCompulser = function()
 	local _0 = {};
-	function _0:compulse()
-		print("You have just compulsed");
+	function _0:compulse(npc)
+		print("You have just compulsed " .. npc.Name);
 	end;
 	return _0;
 end;
