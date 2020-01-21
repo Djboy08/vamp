@@ -4,11 +4,13 @@ import { buildRace } from "shared/buildRace";
 import { Workspace, Players, ReplicatedStorage } from "@rbxts/services";
 
 Players.PlayerAdded.Connect(plr => {
-    let x = buildRace(plr, "isCompulser","isCombatter", "isFeeder");
+    type AnyRace = ReturnType<typeof races[keyof typeof races]>
 
-    if("compulse" in x){
-        // We know they are a compulser.
+    const race = buildRace(plr, "isFeeder", "isCompulser") as AnyRace;
+    if("punch" in race){
+        race.punch()
         
+
     }
 });
 
