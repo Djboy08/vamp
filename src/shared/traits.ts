@@ -24,6 +24,24 @@ export const isPerson = ({player, remote} : {player: Player, remote: NetServerEv
     remote
 });
 
+
+export const isWeakAgainstSun =  ({player, remote} : {player: Player, remote: NetServerEvent}) => {
+    //init stuff here
+    // wait(1)
+    print("sending to all players!")
+    remote.SendToAllPlayers("sun_damage", player);
+    print("sent to all players!")
+    return ({sun_damage() {
+        let humanoid = player.Character?.FindFirstChildOfClass("Humanoid");
+        if(humanoid){
+            for(let i = 1; i < 3; i++){
+                humanoid.Health -= 5;
+                wait(1);
+            }
+        }
+    }
+})};
+
 export const isCompulser =  ({player} : {player: Player}) => {
     //init stuff here
     if(player.Character){

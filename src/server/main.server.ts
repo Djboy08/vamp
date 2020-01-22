@@ -5,6 +5,7 @@ import buildData from "shared/DataBuild"
 import raceManager from "shared/raceManager";
 import Net from "@rbxts/net";
 
+
 type RaceNames = Exclude<keyof typeof races, "isPerson">;
 type AnyRace = ReturnType<typeof races[keyof typeof races]>;
 
@@ -14,8 +15,10 @@ const race_manager = new raceManager();
 
 Players.PlayerAdded.Connect(plr => {
     const DataBuild = new buildData(plr);
+    
     plr.CharacterAdded.Connect((char: Model) => {
-        const race = buildRace<Array<RaceNames>>(plr, remote, ...DataBuild.combineTraitsAndRace()) as AnyRace;
+        wait(1)
+        const race: AnyRace = buildRace<Array<RaceNames>>(plr, remote, ...DataBuild.combineTraitsAndRace()) as AnyRace;
         race_manager.add({race, player: plr, DataBuild});
         // mapping.set(tostring(plr.UserId), {db: DataBuild, race});
         warn(DataBuild.toString())
@@ -26,6 +29,7 @@ Players.PlayerAdded.Connect(plr => {
         let humanoid = char.FindFirstChildOfClass("Humanoid");
         if(humanoid){
             humanoid.Died.Connect(()=>{
+                race_manager.delete({player: plr});
                 plr.LoadCharacter();
             })
         }

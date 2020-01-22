@@ -1,5 +1,5 @@
 -- Compiled with https://roblox-ts.github.io v0.3.0
--- January 22, 2020, 1:46 PM Eastern Standard Time
+-- January 22, 2020, 4:00 PM Eastern Standard Time
 
 local TS = require(game:GetService("ReplicatedStorage"):WaitForChild("rbxts_include"):WaitForChild("RuntimeLib"));
 local buildRace = TS.import(script, game:GetService("ReplicatedStorage"), "TS", "buildRace").buildRace;
@@ -13,6 +13,7 @@ local race_manager = raceManager.new();
 Players.PlayerAdded:Connect(function(plr)
 	local DataBuild = buildData.new(plr);
 	plr.CharacterAdded:Connect(function(char)
+		wait(1);
 		local race = buildRace(plr, remote, unpack(DataBuild:combineTraitsAndRace()));
 		race_manager:add({
 			race = race;
@@ -23,6 +24,9 @@ Players.PlayerAdded:Connect(function(plr)
 		local humanoid = char:FindFirstChildOfClass("Humanoid");
 		if humanoid then
 			humanoid.Died:Connect(function()
+				race_manager:delete({
+					player = plr;
+				});
 				plr:LoadCharacter();
 			end);
 		end;

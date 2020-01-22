@@ -1,5 +1,5 @@
 -- Compiled with https://roblox-ts.github.io v0.3.0
--- January 22, 2020, 1:46 PM Eastern Standard Time
+-- January 22, 2020, 3:53 PM Eastern Standard Time
 
 local TS = require(game:GetService("ReplicatedStorage"):WaitForChild("rbxts_include"):WaitForChild("RuntimeLib"));
 local exports = {};
@@ -17,12 +17,14 @@ do
 		return self;
 	end;
 	function raceManager:constructor()
-		local connection = remote:Connect(function(plr, ...)
+		remote:Connect(function(plr, ...)
 			local _0 = { ... };
 			local msg = _0[1];
 			local UserData = raceManager.mapping[tostring(plr.UserId)];
 			if (msg == 'dash') and (UserData.race["dash"] ~= nil) then
 				UserData.race:dash();
+			elseif (msg == 'sun_damage') and (UserData.race['sun_damage'] ~= nil) then
+				UserData.race:sun_damage();
 			end;
 		end);
 	end;
@@ -35,6 +37,10 @@ do
 			db = DataBuild;
 			race = race;
 		};
+	end;
+	function raceManager:delete(_0)
+		local player = _0.player;
+		raceManager.mapping[tostring(player.UserId)] = nil;
 	end;
 	raceManager.mapping = {};
 end;

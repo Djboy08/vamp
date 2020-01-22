@@ -1,9 +1,8 @@
 -- Compiled with https://roblox-ts.github.io v0.3.0
--- January 22, 2020, 1:17 PM Eastern Standard Time
+-- January 22, 2020, 3:47 PM Eastern Standard Time
 
 local TS = require(game:GetService("ReplicatedStorage"):WaitForChild("rbxts_include"):WaitForChild("RuntimeLib"));
 local exports = {};
-local compose = TS.import(script, TS.getModule(script, "object-composer")).default;
 local _0 = TS.import(script, TS.getModule(script, "services"));
 local ReplicatedStorage, Debris = _0.ReplicatedStorage, _0.Debris;
 local isFeeder = function(_1)
@@ -27,6 +26,28 @@ local isPerson = function(_1)
 		player = player;
 		remote = remote;
 	};
+end;
+local isWeakAgainstSun = function(_1)
+	local player = _1.player;
+	local remote = _1.remote;
+	print("sending to all players!");
+	remote:SendToAllPlayers("sun_damage", player);
+	print("sent to all players!");
+	local _2 = {};
+	function _2:sun_damage()
+		local humanoid = player.Character:FindFirstChildOfClass("Humanoid");
+		if humanoid then
+			do
+				local i = 1;
+				while i < 3 do
+					humanoid.Health = humanoid.Health - (5);
+					wait(1);
+					i = i + 1;
+				end;
+			end;
+		end;
+	end;
+	return _2;
 end;
 local isCompulser = function(_1)
 	local player = _1.player;
@@ -81,12 +102,11 @@ local isDasher = function(_1)
 	end;
 	return _2;
 end;
-local isVampire = compose(isFeeder, isCompulser);
 exports.isFeeder = isFeeder;
 exports.isPerson = isPerson;
+exports.isWeakAgainstSun = isWeakAgainstSun;
 exports.isCompulser = isCompulser;
 exports.isCombatter = isCombatter;
 exports.isRegenerator = isRegenerator;
 exports.isDasher = isDasher;
-exports.isVampire = isVampire;
 return exports;

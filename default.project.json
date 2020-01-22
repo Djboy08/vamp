@@ -22,7 +22,13 @@
 			"StarterPlayerScripts": {
 				"$className": "StarterPlayerScripts",
 				"TS": {
-					"$path": "out/client"
+					"$path": "out/client/player_scripts"
+				}
+            },
+            "StarterCharacterScripts": {
+				"$className": "StarterCharacterScripts",
+				"TS": {
+					"$path": "out/client/character_scripts"
 				}
 			}
 		}

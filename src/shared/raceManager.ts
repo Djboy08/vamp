@@ -16,16 +16,22 @@ export default class raceManager {
     public static mapping: Map<string, UserGameData> = new Map<string, UserGameData>();
     // public moveManager: raceMoves;
     constructor(){
-        let connection = remote.Connect((plr: Player, ...[msg])=>{
+        remote.Connect((plr: Player, ...[msg])=>{
             const UserData = raceManager.mapping.get(tostring(plr.UserId)) as UserGameData;
             if(msg === 'dash' && "dash" in UserData.race){
                 UserData.race.dash();
+            }else if(msg === 'sun_damage' && 'sun_damage' in UserData.race){
+                UserData.race.sun_damage();
             }
         })
     }
 
     public add({race, player, DataBuild}: {race: AnyRace, player: Player, DataBuild: buildData}){
         raceManager.mapping.set(tostring(player.UserId), {db: DataBuild, race});
+    }
+
+    public delete({player}: {player: Player}){
+        raceManager.mapping.delete(tostring(player.UserId));
     }
 }
 

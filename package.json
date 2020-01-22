@@ -1,5 +1,5 @@
 {
-  "name": "TestGame2",
+  "name": "testgame2",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
@@ -14,6 +14,7 @@
   },
   "dependencies": {
     "@rbxts/datastore2": "^1.3.2",
+    "@rbxts/inspect": "^1.0.1",
     "@rbxts/net": "^1.2.5",
     "@rbxts/object-composer": "^1.0.2",
     "@rbxts/resources": "0.0.18",
