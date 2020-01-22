@@ -1,5 +1,5 @@
 -- Compiled with https://roblox-ts.github.io v0.2.14
--- January 22, 2020, 2:39 AM Eastern Standard Time
+-- January 22, 2020, 3:13 AM Eastern Standard Time
 
 local TS = require(game:GetService("ReplicatedStorage"):WaitForChild("rbxts_include"):WaitForChild("RuntimeLib"));
 local exports = {};
@@ -32,9 +32,11 @@ do
 				end;
 			end;
 		};
-		self.moves.forEach(function(func, index)
+		TS.array_forEach(TS.Object_entries(self.moves), function(value)
+			local index = value[1];
+			local callback = value[2];
 			if race[index] ~= nil then
-				func(race);
+				callback(race);
 			end;
 		end);
 	end;
