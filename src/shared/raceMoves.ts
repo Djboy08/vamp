@@ -9,19 +9,17 @@ interface Map {
     [key: string] : (race: any) => void;
 }
 export default class raceMoves {
-    public map: Map;
-
     public moves: Map = {
         "punch": (race: AnyRace) => {
             
         },
-        "feed": (race: feeder) => {
+        "feed": (race: AnyRace) => {
             race.feed()
         },
-        "heal": (race: ReturnType<typeof races["isRegenerator"]>) => {
+        "heal": (race: AnyRace) => {
             race.heal()
         },
-        "compulse": (race: ReturnType<typeof races["isCompulser"]>) => {
+        "compulse": (race: AnyRace) => {
             if(race.player.Character){
                 race.compulse(race.player.Character);
             }
@@ -29,8 +27,7 @@ export default class raceMoves {
     };
 
     constructor(race: AnyRace){
-        this.map = this.moves;
-        this.map.forEach((func: (race: any) => void, index: string) => {
+        this.moves.forEach((func: (race: any) => void, index: string) => {
             if(index in race){
                 func(race);
             }
