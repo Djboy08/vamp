@@ -19,6 +19,7 @@
     "@rbxts/object-composer": "^1.0.2",
     "@rbxts/resources": "0.0.18",
     "@rbxts/services": "^1.0.3",
-    "@rbxts/t": "^1.2.6"
+    "@rbxts/t": "^1.2.6",
+    "@rbxts/tween": "^1.0.2"
   }
 }
