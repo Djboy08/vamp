@@ -1,5 +1,5 @@
 -- Compiled with https://roblox-ts.github.io v0.3.0
--- January 22, 2020, 5:40 AM Eastern Standard Time
+-- January 22, 2020, 5:47 AM Eastern Standard Time
 
 local TS = require(game:GetService("ReplicatedStorage"):WaitForChild("rbxts_include"):WaitForChild("RuntimeLib"));
 local buildRace = TS.import(script, game:GetService("ReplicatedStorage"), "TS", "buildRace").buildRace;
@@ -24,36 +24,36 @@ Players.PlayerAdded:Connect(function(plr)
 			race = race;
 			player = plr;
 		});
-		local traitsModel = Workspace:FindFirstChild("Traits");
-		if traitsModel then
-			local children = traitsModel:GetChildren();
-			for _1 = 1, #children do
-				local obj = children[_1];
-				if obj:IsA("Part") then
-					obj.Touched:Connect(function(part)
-						if (part.Parent) and (part.Parent:IsA("Model")) then
-							local split = string.split((obj.Name), ":");
-							local t = split[1];
-							local P = Players:GetPlayerFromCharacter(part.Parent);
-							local _2 = split[2];
-							repeat
-								if _2 == "add" then
-									print("Adding");
-									mapping[tostring(P.UserId)].db:addTraits(t);
-									P:LoadCharacter();
-									break;
-								end;
-								if _2 == "rem" then
-									print("removing");
-									mapping[tostring(P.UserId)].db:removeTraits(t);
-									P:LoadCharacter();
-									break;
-								end;
-							until true;
-						end;
-					end);
-				end;
-			end;
-		end;
 	end);
 end);
+local traitsModel = Workspace:FindFirstChild("Traits");
+if traitsModel then
+	local children = traitsModel:GetChildren();
+	for _1 = 1, #children do
+		local obj = children[_1];
+		if obj:IsA("Part") then
+			obj.Touched:Connect(function(part)
+				if (part.Parent) and (part.Parent:IsA("Model")) then
+					local split = string.split((obj.Name), ":");
+					local t = split[1];
+					local P = Players:GetPlayerFromCharacter(part.Parent);
+					local _2 = split[2];
+					repeat
+						if _2 == "add" then
+							print("Adding");
+							mapping[tostring(P.UserId)].db:addTraits(t);
+							P:LoadCharacter();
+							break;
+						end;
+						if _2 == "rem" then
+							print("removing");
+							mapping[tostring(P.UserId)].db:removeTraits(t);
+							P:LoadCharacter();
+							break;
+						end;
+					until true;
+				end;
+			end);
+		end;
+	end;
+end;

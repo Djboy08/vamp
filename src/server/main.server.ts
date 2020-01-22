@@ -28,37 +28,35 @@ Players.PlayerAdded.Connect(plr => {
         warn(DataBuild.toString())
         const race_manager = new raceManager({race, player: plr});
 
-
-        let traitsModel = Workspace.FindFirstChild("Traits");
-        if(traitsModel){
-            let children = traitsModel.GetChildren();
-            for(let obj of children){
-                if(obj.IsA("Part")){
-                    obj.Touched.Connect((part)=>{
-                        if(part.Parent && part.Parent.IsA("Model")){
-                            let split = obj.Name.split(`:`);
-                            let t = split[0] as RaceNames;
-                            let P = Players.GetPlayerFromCharacter(part.Parent) as Player;
-                            switch(split[1]){
-                                case "add":
-                                    print("Adding")
-                                    mapping.get(tostring(P.UserId))?.db.addTraits(t)
-                                    P.LoadCharacter();
-                                    break;
-                                case "rem":
-                                    print("removing")
-                                    mapping.get(tostring(P.UserId))?.db.removeTraits(t)
-                                    P.LoadCharacter();
-                                    break;
-                            }
-                        }
-                    })
-                }
-            }
-        }
     })
 });
 
 
 
-
+let traitsModel = Workspace.FindFirstChild("Traits");
+if(traitsModel){
+    let children = traitsModel.GetChildren();
+    for(let obj of children){
+        if(obj.IsA("Part")){
+            obj.Touched.Connect((part)=>{
+                if(part.Parent && part.Parent.IsA("Model")){
+                    let split = obj.Name.split(`:`);
+                    let t = split[0] as RaceNames;
+                    let P = Players.GetPlayerFromCharacter(part.Parent) as Player;
+                    switch(split[1]){
+                        case "add":
+                            print("Adding")
+                            mapping.get(tostring(P.UserId))?.db.addTraits(t)
+                            P.LoadCharacter();
+                            break;
+                        case "rem":
+                            print("removing")
+                            mapping.get(tostring(P.UserId))?.db.removeTraits(t)
+                            P.LoadCharacter();
+                            break;
+                    }
+                }
+            })
+        }
+    }
+}

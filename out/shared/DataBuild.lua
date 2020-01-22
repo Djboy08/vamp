@@ -1,5 +1,5 @@
 -- Compiled with https://roblox-ts.github.io v0.3.0
--- January 22, 2020, 5:28 AM Eastern Standard Time
+-- January 22, 2020, 5:47 AM Eastern Standard Time
 
 local TS = require(game:GetService("ReplicatedStorage"):WaitForChild("rbxts_include"):WaitForChild("RuntimeLib"));
 local exports = {};
@@ -42,7 +42,6 @@ do
 					_0[#_0 + 1] = traits[i + 1];
 					warn("Giving player " .. self.player.Name .. " the trait " .. traits[i + 1]);
 				else
-					error("Player " .. self.player.Name .. " Already has this trait!");
 				end;
 				i = i + 1;
 			end;
@@ -59,7 +58,6 @@ do
 				if temp_set[traits[i + 1]] ~= nil then
 					temp_set[traits[i + 1]] = nil;
 				else
-					error("This trait can not be removed because its not in their traits list.");
 				end;
 				i = i + 1;
 			end;

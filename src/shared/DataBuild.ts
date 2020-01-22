@@ -32,7 +32,7 @@ export default class buildData {
                 this.ar.push(traits[i]);
                 warn(`Giving player ${this.player.Name} the trait ${traits[i]}`)
             }else{
-                error(`Player ${this.player.Name} Already has this trait!`);
+                // error(`Player ${this.player.Name} Already has this trait!`);
             }
         }
 
@@ -45,7 +45,7 @@ export default class buildData {
             if(temp_set.has(traits[i])){
                temp_set.delete(traits[i]); 
             }else{
-                error(`This trait can not be removed because its not in their traits list.`);
+                // error(`This trait can not be removed because its not in their traits list.`);
             }
         }
         this.ar = [...temp_set];
