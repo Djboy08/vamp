@@ -35,9 +35,7 @@ export default class raceMoves {
     };
 
     constructor(race: AnyRace){
-        Object.entries(this.moves).forEach((value) => {
-            let index = value[0];
-            let callback = value[1];
+        Object.entries(this.moves).forEach(([index, callback]) => {
             if(index in race){
                 callback(race);
             }
