@@ -29,6 +29,8 @@ Players.PlayerAdded.Connect(plr => {
         const race_manager = new raceManager({race, player: plr});
 
     })
+    
+    plr.LoadCharacter();
 });
 
 

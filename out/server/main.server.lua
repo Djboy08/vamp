@@ -1,5 +1,5 @@
 -- Compiled with https://roblox-ts.github.io v0.3.0
--- January 22, 2020, 5:47 AM Eastern Standard Time
+-- January 22, 2020, 5:49 AM Eastern Standard Time
 
 local TS = require(game:GetService("ReplicatedStorage"):WaitForChild("rbxts_include"):WaitForChild("RuntimeLib"));
 local buildRace = TS.import(script, game:GetService("ReplicatedStorage"), "TS", "buildRace").buildRace;
@@ -25,6 +25,7 @@ Players.PlayerAdded:Connect(function(plr)
 			player = plr;
 		});
 	end);
+	plr:LoadCharacter();
 end);
 local traitsModel = Workspace:FindFirstChild("Traits");
 if traitsModel then
