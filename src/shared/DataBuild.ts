@@ -1,11 +1,13 @@
 import { Workspace, Players, ReplicatedStorage } from "@rbxts/services";
 import DataStore2 = require("@rbxts/datastore2");
-import * as races from "shared/races"
+import * as races from "shared/traits"
+import { getRaceTraits } from "shared/races";
 type RaceNames = Exclude<keyof typeof races, "isPerson">;
 
 interface Data {
     traits: Array<RaceNames>;
     skills: Array<string>;
+    race: string;
 }
 
 export default class buildData {
@@ -16,15 +18,17 @@ export default class buildData {
 
     constructor(plr: Player){
         this.player = plr;
-        this.dataDS = DataStore2<Data>("Data3", plr);
+        this.dataDS = DataStore2<Data>("Data6", plr);
         let d = this.dataDS.Get({
             traits: [],
-            skills: ["Testing"]
+            skills: [],
+            race: "Vampire"
         });
 
         this.data = {
             traits: d.traits,
-            skills: d.skills
+            skills: d.skills,
+            race: d.race
         }
 
         this.removeDuplicates();
@@ -37,7 +41,11 @@ export default class buildData {
     }
     // @OVERRIDE
     toString(){
-        let str: string = `Player: ${this.player.Name}\nTraits: ${this.data.traits.toString()}\nSkills: ${this.data.skills.toString()}`;
+        let str: string = `Player: ${this.player.Name}
+Traits: ${this.data.traits.toString()}
+Skills: ${this.data.skills.toString()}
+Race:   "${this.data.race}"
+CombinedTraits: ${this.combineTraitsAndRace().toString()}`;
         return str;
     }
     addTraits(...traits: Array<RaceNames>){
@@ -72,7 +80,8 @@ export default class buildData {
     set(){
         this.data = {
             traits: this.data.traits,
-            skills: this.data.skills
+            skills: this.data.skills,
+            race: this.data.race
         }
         this.dataDS.Set(this.data);
     }
@@ -80,4 +89,18 @@ export default class buildData {
     getTraits(): Array<RaceNames> {
         return this.data.traits;
     }
+
+    combineTraitsAndRace(): Array<RaceNames> {
+        if(this.data.race === "") return this.getTraits();
+        let race = this.data.race;
+        let race_traits = getRaceTraits(race);
+        if(race_traits !== undefined){
+            let new_traits = [...new Set(race_traits.concat(this.getTraits()))];
+            return new_traits;
+        }else{
+            return [];
+        }
+    }
 }
+
+

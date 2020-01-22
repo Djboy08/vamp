@@ -1,10 +1,9 @@
 -- Compiled with https://roblox-ts.github.io v0.3.0
--- January 22, 2020, 1:02 PM Eastern Standard Time
+-- January 22, 2020, 1:43 PM Eastern Standard Time
 
 local TS = require(game:GetService("ReplicatedStorage"):WaitForChild("rbxts_include"):WaitForChild("RuntimeLib"));
 local exports = {};
 local raceManager;
-local DataStore2 = TS.import(script, TS.getModule(script, "datastore2").src);
 local Net = TS.import(script, TS.getModule(script, "net").out);
 local remote = Net.ServerEvent.new("movesEvent");
 do

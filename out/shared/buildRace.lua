@@ -1,11 +1,11 @@
 -- Compiled with https://roblox-ts.github.io v0.3.0
--- January 22, 2020, 12:59 PM Eastern Standard Time
+-- January 22, 2020, 1:19 PM Eastern Standard Time
 
 local TS = require(game:GetService("ReplicatedStorage"):WaitForChild("rbxts_include"):WaitForChild("RuntimeLib"));
 local exports = {};
 local buildRace;
 local compose = TS.import(script, TS.getModule(script, "object-composer")).compose;
-local races = TS.import(script, game:GetService("ReplicatedStorage"), "TS", "races");
+local races = TS.import(script, game:GetService("ReplicatedStorage"), "TS", "traits");
 function buildRace(player, remote, ...)
 	local raceNames = { ... };
 	return compose(races.isPerson, unpack(TS.array_map(raceNames, function(r)

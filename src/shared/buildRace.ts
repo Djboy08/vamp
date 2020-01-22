@@ -1,5 +1,5 @@
 import { compose, ComposeTuple } from "@rbxts/object-composer";
-import * as races from "shared/races";
+import * as races from "shared/traits";
 import { Players } from "@rbxts/services";
 import NetServerEvent from "@rbxts/net/out/ServerEvent";
 

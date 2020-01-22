@@ -1,9 +1,10 @@
 -- Compiled with https://roblox-ts.github.io v0.3.0
--- January 22, 2020, 1:02 PM Eastern Standard Time
+-- January 22, 2020, 1:43 PM Eastern Standard Time
 
 local TS = require(game:GetService("ReplicatedStorage"):WaitForChild("rbxts_include"):WaitForChild("RuntimeLib"));
 local exports = {};
 local DataStore2 = TS.import(script, TS.getModule(script, "datastore2").src);
+local getRaceTraits = TS.import(script, game:GetService("ReplicatedStorage"), "TS", "races").getRaceTraits;
 local buildData;
 do
 	buildData = setmetatable({}, {
@@ -17,14 +18,16 @@ do
 	end;
 	function buildData:constructor(plr)
 		self.player = plr;
-		self.dataDS = DataStore2("Data3", plr);
+		self.dataDS = DataStore2("Data6", plr);
 		local d = self.dataDS:Get({
 			traits = {};
-			skills = { "Testing" };
+			skills = {};
+			race = "Vampire";
 		});
 		self.data = {
 			traits = d.traits;
 			skills = d.skills;
+			race = d.race;
 		};
 		self:removeDuplicates();
 		self:set();
@@ -36,7 +39,11 @@ do
 		self.data.skills = TS.set_values(_1);
 	end;
 	function buildData:toString()
-		local str = "Player: " .. self.player.Name .. "\nTraits: " .. TS.array_toString(self.data.traits) .. "\nSkills: " .. TS.array_toString(self.data.skills);
+		local str = "Player: " .. self.player.Name .. "\
+Traits: " .. TS.array_toString(self.data.traits) .. "\
+Skills: " .. TS.array_toString(self.data.skills) .. "\
+Race:   \"" .. self.data.race .. "\"\
+CombinedTraits: " .. TS.array_toString(self:combineTraitsAndRace());
 		return str;
 	end;
 	function buildData:addTraits(...)
@@ -78,11 +85,26 @@ do
 		self.data = {
 			traits = self.data.traits;
 			skills = self.data.skills;
+			race = self.data.race;
 		};
 		self.dataDS:Set(self.data);
 	end;
 	function buildData:getTraits()
 		return self.data.traits;
+	end;
+	function buildData:combineTraitsAndRace()
+		if self.data.race == "" then
+			return self:getTraits();
+		end;
+		local race = self.data.race;
+		local race_traits = getRaceTraits(race);
+		if race_traits ~= nil then
+			local _0 = TS.set_new(TS.array_concat(race_traits, self:getTraits()));
+			local new_traits = TS.set_values(_0);
+			return new_traits;
+		else
+			return {};
+		end;
 	end;
 	function buildData:__tostring() return self:toString(); end;
 end;

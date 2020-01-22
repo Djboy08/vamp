@@ -1,7 +1,5 @@
 import { Workspace, Players, ReplicatedStorage } from "@rbxts/services";
-import DataStore2 = require("@rbxts/datastore2");
-import * as races from "shared/races"
-import raceMoves from "shared/raceMoves"
+import * as races from "shared/traits"
 import buildData from "shared/DataBuild"
 import Net from "@rbxts/net";
 

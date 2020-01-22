@@ -1,4 +1,3 @@
-import { makeHello } from "shared/module";
 import Net from "@rbxts/net";
 import { Players, UserInputService } from "@rbxts/services";
 

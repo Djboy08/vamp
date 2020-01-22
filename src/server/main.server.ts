@@ -1,8 +1,6 @@
-import compose from "@rbxts/object-composer";
-import * as races from "shared/races"
+import * as races from "shared/traits"
 import { buildRace } from "shared/buildRace";
 import { Workspace, Players, ReplicatedStorage } from "@rbxts/services";
-import DataStore2 = require("@rbxts/datastore2");
 import buildData from "shared/DataBuild"
 import raceManager from "shared/raceManager";
 import Net from "@rbxts/net";
@@ -17,7 +15,7 @@ const race_manager = new raceManager();
 Players.PlayerAdded.Connect(plr => {
     const DataBuild = new buildData(plr);
     plr.CharacterAdded.Connect((char: Model) => {
-        const race = buildRace<Array<RaceNames>>(plr, remote, ...DataBuild.getTraits()) as AnyRace;
+        const race = buildRace<Array<RaceNames>>(plr, remote, ...DataBuild.combineTraitsAndRace()) as AnyRace;
         race_manager.add({race, player: plr, DataBuild});
         // mapping.set(tostring(plr.UserId), {db: DataBuild, race});
         warn(DataBuild.toString())
@@ -37,7 +35,7 @@ Players.PlayerAdded.Connect(plr => {
 });
 
 
-
+// buttons for giving people or removing traits
 let traitsModel = Workspace.FindFirstChild("Traits");
 if(traitsModel){
     let children = traitsModel.GetChildren();
