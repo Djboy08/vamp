@@ -1,5 +1,5 @@
 -- Compiled with https://roblox-ts.github.io v0.2.14
--- January 21, 2020, 11:12 PM Eastern Standard Time
+-- January 22, 2020, 12:07 AM Eastern Standard Time
 
 local TS = require(game:GetService("ReplicatedStorage"):WaitForChild("rbxts_include"):WaitForChild("RuntimeLib"));
 local exports = {};
@@ -18,8 +18,10 @@ do
 	end;
 	function buildData:constructor(plr)
 		self.player = plr;
-		self.traits = DataStore2("Traits6", plr);
+		self.traits = DataStore2("Traits7", plr);
 		self.ar = self.traits:Get({});
+		local _0 = self.ar;
+		_0[#_0 + 1] = "isCombatter";
 		self:removeDuplicates();
 		self:set();
 	end;
@@ -34,12 +36,18 @@ do
 	end;
 	function buildData:addTraits(...)
 		local traits = { ... };
+		local temp_set = TS.set_new(self.ar);
 		do
 			local i = 0;
 			while i < #traits do
-				local _0 = self.ar;
-				_0[#_0 + 1] = traits[i + 1];
-				warn("Giving player " .. self.player.Name .. " the trait " .. traits[i + 1]);
+				print("is " .. traits[i + 1] .. " in their traits? = " .. tostring((temp_set[traits[i + 1]] ~= nil)));
+				if not (temp_set[traits[i + 1]] ~= nil) then
+					local _0 = self.ar;
+					_0[#_0 + 1] = traits[i + 1];
+					warn("Giving player " .. self.player.Name .. " the trait " .. traits[i + 1]);
+				else
+					error("Player " .. self.player.Name .. " Already has this trait!");
+				end;
 				i = i + 1;
 			end;
 		end;
@@ -48,16 +56,19 @@ do
 	end;
 	function buildData:removeTraits(...)
 		local traits = { ... };
+		local temp_set = TS.set_new(self.ar);
 		do
 			local i = 0;
 			while i < #traits do
-				local _0 = self.ar;
-				_0[#_0 + 1] = traits[i + 1];
-				warn("Giving player " .. self.player.Name .. " the trait " .. traits[i + 1]);
+				if (temp_set[traits[i + 1]] ~= nil) then
+					temp_set[traits[i + 1]] = nil;
+				else
+					error("This trait can not be removed because its not in their traits list.");
+				end;
 				i = i + 1;
 			end;
 		end;
-		self:removeDuplicates();
+		self.ar = TS.set_values(temp_set);
 		self:set();
 	end;
 	function buildData:set()

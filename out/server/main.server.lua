@@ -1,5 +1,5 @@
 -- Compiled with https://roblox-ts.github.io v0.2.14
--- January 21, 2020, 11:12 PM Eastern Standard Time
+-- January 22, 2020, 12:07 AM Eastern Standard Time
 
 local TS = require(game:GetService("ReplicatedStorage"):WaitForChild("rbxts_include"):WaitForChild("RuntimeLib"));
 local races = TS.import(game:GetService("ReplicatedStorage"), "TS", "races");
@@ -25,8 +25,21 @@ Players.PlayerAdded:Connect(function(plr)
 				if obj.ClassName == "Part" then
 					(obj).Touched:Connect(function(part)
 						if part.Parent and part.Parent.ClassName == "Model" then
-							local t = obj.Name;
-							DataBuild:addTraits(t);
+							local split = string.split((obj.Name), ":");
+							local t = split[1];
+							local _2 = split[2];
+							repeat
+								if _2 == "add" then
+									print("Adding");
+									DataBuild:addTraits(t);
+									break;
+								end;
+								if _2 == "rem" then
+									print("removing");
+									DataBuild:removeTraits(t);
+									break;
+								end;
+							until true;
 						end;
 					end);
 				end;

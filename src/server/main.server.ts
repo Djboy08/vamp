@@ -26,9 +26,18 @@ Players.PlayerAdded.Connect(plr => {
                 if(obj.ClassName === "Part"){
                     (obj as Part).Touched.Connect((part)=>{
                         if(part.Parent && part.Parent.ClassName === "Model"){
-                            let t = obj.Name as RaceNames;
-
-                            DataBuild.addTraits(t)
+                            let split = obj.Name.split(`:`);
+                            let t = split[0] as RaceNames;
+                            switch(split[1]){
+                                case "add":
+                                    print("Adding")
+                                    DataBuild.addTraits(t);
+                                    break;
+                                case "rem":
+                                    print("removing")
+                                    DataBuild.removeTraits(t);
+                                    break;
+                            }
                         }
                     })
                 }
