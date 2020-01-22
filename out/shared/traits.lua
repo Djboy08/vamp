@@ -1,5 +1,5 @@
 -- Compiled with https://roblox-ts.github.io v0.3.0
--- January 22, 2020, 3:47 PM Eastern Standard Time
+-- January 22, 2020, 4:20 PM Eastern Standard Time
 
 local TS = require(game:GetService("ReplicatedStorage"):WaitForChild("rbxts_include"):WaitForChild("RuntimeLib"));
 local exports = {};
@@ -35,7 +35,12 @@ local isWeakAgainstSun = function(_1)
 	print("sent to all players!");
 	local _2 = {};
 	function _2:sun_damage()
-		local humanoid = player.Character:FindFirstChildOfClass("Humanoid");
+		local humanoid;
+		if player.Character then
+			humanoid = player.Character:FindFirstChildOfClass("Humanoid");
+		else
+			humanoid = nil;
+		end;
 		if humanoid then
 			do
 				local i = 1;

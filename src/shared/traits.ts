@@ -32,7 +32,7 @@ export const isWeakAgainstSun =  ({player, remote} : {player: Player, remote: Ne
     remote.SendToAllPlayers("sun_damage", player);
     print("sent to all players!")
     return ({sun_damage() {
-        let humanoid = player.Character?.FindFirstChildOfClass("Humanoid");
+        let humanoid = player.Character ? player.Character.FindFirstChildOfClass("Humanoid") : undefined;
         if(humanoid){
             for(let i = 1; i < 3; i++){
                 humanoid.Health -= 5;

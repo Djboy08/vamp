@@ -17,7 +17,8 @@ Players.PlayerAdded.Connect(plr => {
     const DataBuild = new buildData(plr);
     
     plr.CharacterAdded.Connect((char: Model) => {
-        wait(1)
+        // wait(1)
+        // print();
         const race: AnyRace = buildRace<Array<RaceNames>>(plr, remote, ...DataBuild.combineTraitsAndRace()) as AnyRace;
         race_manager.add({race, player: plr, DataBuild});
         // mapping.set(tostring(plr.UserId), {db: DataBuild, race});
@@ -36,6 +37,7 @@ Players.PlayerAdded.Connect(plr => {
     })
 
     plr.LoadCharacter();
+
 });
 
 
