@@ -1,26 +1,34 @@
 -- Compiled with https://roblox-ts.github.io v0.3.0
--- January 22, 2020, 4:45 AM Eastern Standard Time
+-- January 22, 2020, 5:28 AM Eastern Standard Time
 
 local TS = require(game:GetService("ReplicatedStorage"):WaitForChild("rbxts_include"):WaitForChild("RuntimeLib"));
 local exports = {};
 local compose = TS.import(script, TS.getModule(script, "object-composer")).default;
-local isFeeder = function()
-	local _0 = {};
-	_0.hunger = 100;
-	function _0:feed()
+local ReplicatedStorage = TS.import(script, TS.getModule(script, "services")).ReplicatedStorage;
+local isFeeder = function(_0)
+	local player = _0.player;
+	local asset = ReplicatedStorage:FindFirstChild("BanHammar");
+	if asset then
+		local clone = asset:Clone();
+		clone.Parent = player:FindFirstChild("Backpack");
+	end;
+	local _1 = {};
+	_1.hunger = 100;
+	function _1:feed()
 		print("feed");
 	end;
-	return _0;
+	return _1;
 end;
 local isPerson = function(_0)
 	local player = _0.player;
+	local remote = _0.remote;
 	return {
 		player = player;
+		remote = remote;
 	};
 end;
 local isCompulser = function(_0)
 	local player = _0.player;
-	print(player.Name .. " is A COMPULSER");
 	local _1 = {};
 	function _1:compulse(npc)
 		print("You have just compulsed " .. npc.Name);

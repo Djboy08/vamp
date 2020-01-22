@@ -1,6 +1,14 @@
 import compose from "@rbxts/object-composer";
+import NetServerEvent from "@rbxts/net/out/ServerEvent";
+import { Workspace, Players, ReplicatedStorage } from "@rbxts/services";
 
-export const isFeeder = () => ({
+export const isFeeder = ({player}: {player: Player}) => {
+    let asset = ReplicatedStorage.FindFirstChild("BanHammar");
+    if(asset){
+        let clone = asset.Clone();
+        clone.Parent = player.FindFirstChild("Backpack");
+    }
+    return ({
     hunger: 100,
     // feed(npc: Model) {
     //     this.hunger--;
@@ -9,14 +17,15 @@ export const isFeeder = () => ({
     feed(){
         print("feed");
     }
-});
+})};
 
-export const isPerson = ({player} : {player: Player}) => ({
-    player
+export const isPerson = ({player, remote} : {player: Player, remote: NetServerEvent}) => ({
+    player,
+    remote
 });
 
 export const isCompulser =  ({player} : {player: Player}) => {
-    print(`${player.Name} is A COMPULSER`);
+    //init stuff here
     return ({compulse(npc: Model) {
         print(`You have just compulsed ${npc.Name}`)
     }

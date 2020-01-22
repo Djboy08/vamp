@@ -16,18 +16,14 @@ interface UserGameData {
 }
 
 let mapping = new Map<string, UserGameData>();
-const myRemote = new Net.ServerEvent("EventName");
-myRemote.Connect((plr: Player, message)=>{
-    print(`${message}`);
-})
+
+const myRemote = new Net.ServerEvent("movesEvent");
 
 
 Players.PlayerAdded.Connect(plr => {
     const DataBuild = new buildData(plr);
-    // dataStore.Set(ar2);
-    myRemote.SendToPlayer(plr,"HII!");
     plr.CharacterAdded.Connect((char: Model) => {
-        const race = buildRace<Array<RaceNames>>(plr, ...DataBuild.getTraits()) as AnyRace;
+        const race = buildRace<Array<RaceNames>>(plr, myRemote, ...DataBuild.getTraits()) as AnyRace;
         mapping.set(tostring(plr.UserId), {db: DataBuild, race});
         warn(DataBuild.toString())
         const race_manager = new raceManager({race, player: plr});
@@ -46,10 +42,12 @@ Players.PlayerAdded.Connect(plr => {
                                 case "add":
                                     print("Adding")
                                     DataBuild.addTraits(t);
+                                    plr.LoadCharacter();
                                     break;
                                 case "rem":
                                     print("removing")
                                     DataBuild.removeTraits(t);
+                                    plr.LoadCharacter();
                                     break;
                             }
                         }

@@ -1,6 +1,7 @@
 import { compose, ComposeTuple } from "@rbxts/object-composer";
 import * as races from "shared/races";
 import { Players } from "@rbxts/services";
+import NetServerEvent from "@rbxts/net/out/ServerEvent";
 
 type RaceNames = Exclude<keyof typeof races, "isPerson">;
 type Racify<T extends Array<RaceNames>> = {
@@ -13,9 +14,10 @@ type Racify<T extends Array<RaceNames>> = {
  */
 export function buildRace<T extends Array<RaceNames>>(
     player: Player,
+    remote: NetServerEvent,
     ...raceNames: T
 ): ReturnType<ComposeTuple<Racify<T>>>;
-export function buildRace(player: Player, ...raceNames: Array<RaceNames>) {
-    return compose(races.isPerson, ...raceNames.map(r => races[r]))({ player });
+export function buildRace(player: Player, remote: NetServerEvent, ...raceNames: Array<RaceNames>) {
+    return compose(races.isPerson, ...raceNames.map(r => races[r]))({ player, remote });
 }
 
