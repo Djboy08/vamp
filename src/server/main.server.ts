@@ -9,12 +9,20 @@ import raceManager from "shared/raceManager";
 type RaceNames = Exclude<keyof typeof races, "isPerson">;
 type AnyRace = ReturnType<typeof races[keyof typeof races]>;
 
+interface UserGameData {
+    db: buildData;
+    race: AnyRace;
+}
+
+let mapping = new Map<string, UserGameData>();
+
 Players.PlayerAdded.Connect(plr => {
     const DataBuild = new buildData(plr);
     // dataStore.Set(ar2);
 
     plr.CharacterAdded.Connect((char: Model) => {
         const race = buildRace<Array<RaceNames>>(plr, ...DataBuild.getTraits()) as AnyRace;
+        mapping.set(tostring(plr.UserId), {db: DataBuild, race});
         warn(DataBuild.toString())
         const race_manager = new raceManager({race, player: plr});
 
