@@ -1,5 +1,5 @@
 -- Compiled with https://roblox-ts.github.io v0.3.0
--- January 22, 2020, 10:26 AM Eastern Standard Time
+-- January 22, 2020, 12:59 PM Eastern Standard Time
 
 local TS = require(game:GetService("ReplicatedStorage"):WaitForChild("rbxts_include"):WaitForChild("RuntimeLib"));
 local exports = {};
@@ -73,7 +73,7 @@ local isDasher = function(_1)
 			local vel = Instance.new("BodyVelocity");
 			vel.Name = "BV";
 			vel.MaxForce = Vector3.new(math.huge, math.huge, math.huge);
-			vel.Velocity = (root.CFrame.LookVector * (250));
+			vel.Velocity = ((root.CFrame.LookVector * (250)) + (Vector3.new(0, 50, 0)));
 			vel.Parent = root;
 			Debris:AddItem(vel, 0.05);
 			remote:SendToAllPlayers("dashed!");

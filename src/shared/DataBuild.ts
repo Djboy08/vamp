@@ -16,10 +16,10 @@ export default class buildData {
 
     constructor(plr: Player){
         this.player = plr;
-        this.dataDS = DataStore2<Data>("Data1", plr);
+        this.dataDS = DataStore2<Data>("Data3", plr);
         let d = this.dataDS.Get({
             traits: [],
-            skills: []
+            skills: ["Testing"]
         });
 
         this.data = {

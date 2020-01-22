@@ -61,7 +61,7 @@ export const isDasher = ({player, remote}: {player: Player, remote: NetServerEve
                 let vel = new Instance("BodyVelocity") as BodyVelocity;
                 vel.Name = "BV";
                 vel.MaxForce = new Vector3(math.huge, math.huge, math.huge);
-                vel.Velocity = root.CFrame.LookVector.mul(250);
+                vel.Velocity = root.CFrame.LookVector.mul(250).add(new Vector3(0,50,0));
                 vel.Parent = root;
                 Debris.AddItem(vel, 0.05);
                 remote.SendToAllPlayers("dashed!");
