@@ -10,12 +10,12 @@ export default class raceManager {
 
     public race: AnyRace;
     public player: Player;
-    public moveManager: raceMoves;
+    // public moveManager: raceMoves;
 
     constructor({race, player}: {race: AnyRace, player: Player}){
         this.race = race;
         this.player = player;
-        this.moveManager = new raceMoves(this.race);
+        // this.moveManager = new raceMoves(this.race);
 
         
     }

@@ -1,5 +1,5 @@
 -- Compiled with https://roblox-ts.github.io v0.2.14
--- January 22, 2020, 12:12 AM Eastern Standard Time
+-- January 22, 2020, 3:47 AM Eastern Standard Time
 
 local TS = require(game:GetService("ReplicatedStorage"):WaitForChild("rbxts_include"):WaitForChild("RuntimeLib"));
 local exports = {};
@@ -18,7 +18,7 @@ do
 	end;
 	function buildData:constructor(plr)
 		self.player = plr;
-		self.traits = DataStore2("Traits7", plr);
+		self.traits = DataStore2("Traits8", plr);
 		self.ar = self.traits:Get({});
 		self:removeDuplicates();
 		self:set();

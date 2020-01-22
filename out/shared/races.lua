@@ -1,5 +1,5 @@
 -- Compiled with https://roblox-ts.github.io v0.2.14
--- January 22, 2020, 12:02 AM Eastern Standard Time
+-- January 22, 2020, 3:47 AM Eastern Standard Time
 
 local TS = require(game:GetService("ReplicatedStorage"):WaitForChild("rbxts_include"):WaitForChild("RuntimeLib"));
 local exports = {};
@@ -18,12 +18,14 @@ local isPerson = function(_0)
 		player = player;
 	};
 end;
-local isCompulser = function()
-	local _0 = {};
-	function _0:compulse(npc)
+local isCompulser = function(_0)
+	local player = _0.player;
+	print(player.Name .. " is A COMPULSER");
+	local _1 = {};
+	function _1:compulse(npc)
 		print("You have just compulsed " .. npc.Name);
 	end;
-	return _0;
+	return _1;
 end;
 local isCombatter = function()
 	local _0 = {};

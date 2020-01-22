@@ -9,7 +9,7 @@ export default class buildData {
     private player: Player;
     constructor(plr: Player){
         this.player = plr;
-        this.traits = DataStore2<Array<RaceNames>>("Traits7", plr);
+        this.traits = DataStore2<Array<RaceNames>>("Traits8", plr);
         this.ar = this.traits.Get([]) as Array<RaceNames>;
         this.removeDuplicates();
         this.set();

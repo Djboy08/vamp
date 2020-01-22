@@ -15,11 +15,12 @@ export const isPerson = ({player} : {player: Player}) => ({
     player
 });
 
-export const isCompulser = () => ({
-    compulse(npc: Model) {
+export const isCompulser =  ({player} : {player: Player}) => {
+    print(`${player.Name} is A COMPULSER`);
+    return ({compulse(npc: Model) {
         print(`You have just compulsed ${npc.Name}`)
     }
-});
+})};
 
 export const isCombatter = () => ({
     punch(){

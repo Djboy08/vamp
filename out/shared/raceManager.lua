@@ -1,10 +1,9 @@
 -- Compiled with https://roblox-ts.github.io v0.2.14
--- January 22, 2020, 3:17 AM Eastern Standard Time
+-- January 22, 2020, 3:47 AM Eastern Standard Time
 
 local TS = require(game:GetService("ReplicatedStorage"):WaitForChild("rbxts_include"):WaitForChild("RuntimeLib"));
 local exports = {};
 local races = TS.import(game:GetService("ReplicatedStorage"), "TS", "races");
-local raceMoves = TS.import(game:GetService("ReplicatedStorage"), "TS", "raceMoves").default;
 local raceManager;
 do
 	raceManager = setmetatable({}, {
@@ -21,7 +20,6 @@ do
 		local player = _0.player;
 		self.race = race;
 		self.player = player;
-		self.moveManager = raceMoves.new(self.race);
 	end;
 end;
 exports.default = raceManager;
