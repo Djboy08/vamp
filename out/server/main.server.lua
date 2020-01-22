@@ -1,16 +1,22 @@
--- Compiled with https://roblox-ts.github.io v0.2.14
--- January 22, 2020, 4:19 AM Eastern Standard Time
+-- Compiled with https://roblox-ts.github.io v0.3.0
+-- January 22, 2020, 4:50 AM Eastern Standard Time
 
 local TS = require(game:GetService("ReplicatedStorage"):WaitForChild("rbxts_include"):WaitForChild("RuntimeLib"));
-local races = TS.import(game:GetService("ReplicatedStorage"), "TS", "races");
-local buildRace = TS.import(game:GetService("ReplicatedStorage"), "TS", "buildRace").buildRace;
-local _0 = TS.import(TS.getModule("services"));
+local buildRace = TS.import(script, game:GetService("ReplicatedStorage"), "TS", "buildRace").buildRace;
+local _0 = TS.import(script, TS.getModule(script, "services"));
 local Workspace, Players = _0.Workspace, _0.Players;
-local buildData = TS.import(game:GetService("ReplicatedStorage"), "TS", "DataBuild").default;
-local raceManager = TS.import(game:GetService("ReplicatedStorage"), "TS", "raceManager").default;
+local DataStore2 = TS.import(script, TS.getModule(script, "datastore2").src);
+local buildData = TS.import(script, game:GetService("ReplicatedStorage"), "TS", "DataBuild").default;
+local raceManager = TS.import(script, game:GetService("ReplicatedStorage"), "TS", "raceManager").default;
+local Net = TS.import(script, TS.getModule(script, "net").out);
 local mapping = {};
+local myRemote = Net.ServerEvent.new("EventName");
+myRemote:Connect(function(plr, message)
+	print(tostring(message));
+end);
 Players.PlayerAdded:Connect(function(plr)
 	local DataBuild = buildData.new(plr);
+	myRemote:SendToPlayer(plr, "HII!");
 	plr.CharacterAdded:Connect(function(char)
 		local race = buildRace(plr, unpack(DataBuild:getTraits()));
 		mapping[tostring(plr.UserId)] = {
@@ -29,7 +35,7 @@ Players.PlayerAdded:Connect(function(plr)
 				local obj = children[_1];
 				if obj:IsA("Part") then
 					obj.Touched:Connect(function(part)
-						if part.Parent and part.Parent.ClassName == "Model" then
+						if (part.Parent) and (part.Parent.ClassName == "Model") then
 							local split = string.split((obj.Name), ":");
 							local t = split[1];
 							local _2 = split[2];

@@ -1,9 +1,9 @@
--- Compiled with https://roblox-ts.github.io v0.2.14
--- January 22, 2020, 3:47 AM Eastern Standard Time
+-- Compiled with https://roblox-ts.github.io v0.3.0
+-- January 22, 2020, 4:45 AM Eastern Standard Time
 
 local TS = require(game:GetService("ReplicatedStorage"):WaitForChild("rbxts_include"):WaitForChild("RuntimeLib"));
 local exports = {};
-local compose = TS.import(TS.getModule("object-composer")).default;
+local compose = TS.import(script, TS.getModule(script, "object-composer")).default;
 local isFeeder = function()
 	local _0 = {};
 	_0.hunger = 100;

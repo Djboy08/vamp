@@ -1,12 +1,12 @@
 local Promise = require(script.Parent.Promise)
 
 local HttpService = game:GetService("HttpService")
+local RunService = game:GetService("RunService")
 
--- constants
-local table_sort = table.sort
-local table_concat = table.concat
-local math_ceil = math.ceil
-local math_floor = math.floor
+local ReplicatedFirst
+if not __LEMUR__ then
+	ReplicatedFirst = game:GetService("ReplicatedFirst")
+end
 
 local TS = {}
 
@@ -54,92 +54,97 @@ end
 TS.Symbol = Symbol
 TS.Symbol_iterator = Symbol("Symbol.iterator")
 
--- module resolution
-local globalModules = script.Parent:FindFirstChild("node_modules")
+local function isPlugin(object)
+	return RunService:IsStudio() and object:FindFirstAncestorWhichIsA("Plugin") ~= nil
+end
 
-function TS.getModule(moduleName)
-	local object = getfenv(2).script.Parent
+-- module resolution
+function TS.getModule(object, moduleName)
+	if not __LEMUR__ and object:IsDescendantOf(ReplicatedFirst) then
+		warn("roblox-ts packages should not be used from ReplicatedFirst!")
+	end
+
+	-- ensure modules have fully replicated
+	if not __LEMUR__ and RunService:IsClient() and not isPlugin(object) and not game:IsLoaded() then
+		game.Loaded:Wait()
+	end
+
+	local globalModules = script.Parent:FindFirstChild("node_modules")
 	if not globalModules then
 		error("Could not find any modules!", 2)
 	end
-	if object:IsDescendantOf(globalModules) then
-		while object.Parent do
-			local modules = object:FindFirstChild("node_modules")
-			if modules then
-				local module = modules:FindFirstChild(moduleName)
-				if module then
-					return module
-				end
+
+	repeat
+		local modules = object:FindFirstChild("node_modules")
+		if modules then
+			local module = modules:FindFirstChild(moduleName)
+			if module then
+				return module
 			end
-			object = object.Parent
 		end
-	else
-		local module = globalModules:FindFirstChild(moduleName)
-		if module then
-			return module
-		end
-	end
-	error("Could not find module: " .. moduleName, 2)
+		object = object.Parent
+	until object == nil or object == globalModules
+
+	return globalModules:FindFirstChild(moduleName) or error("Could not find module: " .. moduleName, 2)
 end
 
 -- This is a hash which TS.import uses as a kind of linked-list-like history of [Script who Loaded] -> Library
-local loadedLibraries = {}
 local currentlyLoading = {}
+local registeredLibraries = {}
 
-function TS.import(module, ...)
+function TS.import(caller, module, ...)
 	for i = 1, select("#", ...) do
 		module = module:WaitForChild((select(i, ...)))
 	end
 
-	if module.ClassName == "ModuleScript" then
-		local data = loadedLibraries[module]
-
-		if data == nil then
-			-- If called from command bar, use table as a reference (this is never concatenated)
-			local caller = getfenv(0).script or { Name = "Command bar" }
-			currentlyLoading[caller] = module
-
-			-- Check to see if a case like this occurs:
-			-- module -> Module1 -> Module2 -> module
-
-			-- WHERE currentlyLoading[module] is Module1
-			-- and currentlyLoading[Module1] is Module2
-			-- and currentlyLoading[Module2] is module
-
-			local currentModule = module
-			local depth = 0
-
-			while currentModule do
-				depth = depth + 1
-				currentModule = currentlyLoading[currentModule]
-
-				if currentModule == module then
-					local str = currentModule.Name -- Get the string traceback
-
-					for _ = 1, depth do
-						currentModule = currentlyLoading[currentModule]
-						str = str .. " -> " .. currentModule.Name
-					end
-
-					error("Failed to import! Detected a circular dependency chain: " .. str, 2)
-				end
-			end
-
-			assert(_G[module] == nil, "Invalid module access!")
-			_G[module] = TS
-			data = { value = require(module) }
-
-			if currentlyLoading[caller] == module then -- Thread-safe cleanup!
-				currentlyLoading[caller] = nil
-			end
-
-			loadedLibraries[module] = data -- Cache for subsequent calls
-		end
-
-		return data.value
-	else
+	if module.ClassName ~= "ModuleScript" then
 		error("Failed to import! Expected ModuleScript, got " .. module.ClassName, 2)
 	end
+
+	currentlyLoading[caller] = module
+
+	-- Check to see if a case like this occurs:
+	-- module -> Module1 -> Module2 -> module
+
+	-- WHERE currentlyLoading[module] is Module1
+	-- and currentlyLoading[Module1] is Module2
+	-- and currentlyLoading[Module2] is module
+
+	local currentModule = module
+	local depth = 0
+
+	while currentModule do
+		depth = depth + 1
+		currentModule = currentlyLoading[currentModule]
+
+		if currentModule == module then
+			local str = currentModule.Name -- Get the string traceback
+
+			for _ = 1, depth do
+				currentModule = currentlyLoading[currentModule]
+				str = str .. "  ⇒ " .. currentModule.Name
+			end
+
+			error("Failed to import! Detected a circular dependency chain: " .. str, 2)
+		end
+	end
+
+	if not registeredLibraries[module] then
+		if _G[module] then
+			error("Invalid module access! Do you have two TS runtimes trying to import this? " .. module:GetFullName(), 2)
+		end
+
+		_G[module] = TS
+		registeredLibraries[module] = true -- register as already loaded for subsequent calls
+	end
+
+	local data = require(module)
+
+	if currentlyLoading[caller] == module then -- Thread-safe cleanup!
+		currentlyLoading[caller] = nil
+	end
+
+	return data
 end
 
 function TS.exportNamespace(module, ancestor)
@@ -200,7 +205,7 @@ function TS.await(promise)
 	if ok then
 		return result
 	else
-		TS.throw(ok == nil and "The awaited Promise was cancelled" or result)
+		error(ok == nil and "The awaited Promise was cancelled" or result, 2)
 	end
 end
 
@@ -212,74 +217,14 @@ function TS.add(a, b)
 	end
 end
 
-local function bitTruncate(a)
-	if a < 0 then
-		return math_ceil(a)
-	else
-		return math_floor(a)
-	end
-end
-
-TS.bit_truncate = bitTruncate
-
--- bitwise operations
-local powOfTwo = setmetatable({}, {
-	__index = function(self, i)
-		local v = 2 ^ i
-		self[i] = v
-		return v
-	end;
-})
-
-local _2_52 = powOfTwo[52]
-local function bitop(a, b, oper)
-	local r, m, s = 0, _2_52
-	repeat
-		s, a, b = a + b + m, a % m, b % m
-		r, m = r + m * oper % (s - a - b), m / 2
-	until m < 1
-	return r
-end
-
-function TS.bit_not(a)
-	return -a - 1
-end
-
-function TS.bit_or(a, b)
-	a = bitTruncate(tonumber(a))
-	b = bitTruncate(tonumber(b))
-	return bitop(a, b, 1)
-end
-
-function TS.bit_and(a, b)
-	a = bitTruncate(tonumber(a))
-	b = bitTruncate(tonumber(b))
-	return bitop(a, b, 4)
-end
-
-function TS.bit_xor(a, b)
-	a = bitTruncate(tonumber(a))
-	b = bitTruncate(tonumber(b))
-	return bitop(a, b, 3)
-end
-
-function TS.bit_lsh(a, b)
-	a = bitTruncate(tonumber(a))
-	b = bitTruncate(tonumber(b))
-	return a * powOfTwo[b]
-end
-
-function TS.bit_rsh(a, b)
-	a = bitTruncate(tonumber(a))
-	b = bitTruncate(tonumber(b))
-	return bitTruncate(a / powOfTwo[b])
-end
-
 function TS.bit_lrsh(a, b)
-	a = bitTruncate(tonumber(a))
-	b = bitTruncate(tonumber(b))
-	if a >= 0 then return TS.bit_rsh(a, b) end
-	return TS.bit_rsh((a % powOfTwo[32]), b)
+	local absA = math.abs(a)
+	local result = bit32.rshift(absA, b)
+	if a == absA then
+		return result
+	else
+		return -result - 1
+	end
 end
 
 -- utility functions
@@ -291,16 +236,27 @@ local function copy(object)
 	return result
 end
 
-local function deepCopy(object)
+local function deepCopyHelper(object, encountered)
 	local result = {}
+	encountered[object] = result
+
 	for k, v in pairs(object) do
-		if type(v) == "table" then
-			result[k] = deepCopy(v)
-		else
-			result[k] = v
+		if type(k) == "table" then
+			k = encountered[k] or deepCopyHelper(k, encountered)
 		end
+
+		if type(v) == "table" then
+			v = encountered[v] or deepCopyHelper(v, encountered)
+		end
+
+		result[k] = v
 	end
+
 	return result
+end
+
+local function deepCopy(object)
+	return deepCopyHelper(object, {})
 end
 
 local function deepEquals(a, b)
@@ -406,19 +362,54 @@ end
 
 function TS.array_forEach(list, callback)
 	for i = 1, #list do
-		local v = list[i]
-		if v ~= nil then
-			callback(v, i - 1, list)
-		end
+		callback(list[i], i - 1, list)
 	end
 end
 
-function TS.array_map(list, callback)
+local function array_map(list, callback)
 	local result = {}
 	for i = 1, #list do
-		local v = list[i]
-		if v ~= nil then
-			result[i] = callback(v, i - 1, list)
+		result[i] = callback(list[i], i - 1, list)
+	end
+	return result
+end
+
+TS.array_map = array_map
+
+function TS.array_mapFiltered(list, callback)
+    local new = {}
+    local index = 1
+
+    for i = 1, #list do
+        local result = callback(list[i], i - 1, list)
+
+        if result ~= nil then
+            new[index] = result
+            index = index + 1
+        end
+    end
+
+    return new
+end
+
+local function getArraySizeSlow(list)
+    local result = 0
+    for index in pairs(list) do
+        if index > result then
+            result = index
+        end
+    end
+    return result
+end
+
+function TS.array_filterUndefined(list)
+	local length = 0
+	local result = {}
+	for i = 1, getArraySizeSlow(list) do
+		local value = list[i]
+		if value ~= nil then
+			length = length + 1
+			result[length] = value
 		end
 	end
 	return result
@@ -428,29 +419,16 @@ function TS.array_filter(list, callback)
 	local result = {}
 	for i = 1, #list do
 		local v = list[i]
-		if v ~= nil and callback(v, i - 1, list) == true then
+		if callback(v, i - 1, list) == true then
 			result[#result + 1] = v
 		end
 	end
 	return result
 end
 
-local function sortFallback(a, b)
-	return tostring(a) < tostring(b)
-end
-
 function TS.array_sort(list, callback)
-	local sorted = array_copy(list)
-
-	if callback then
-		table_sort(sorted, function(a, b)
-			return 0 < callback(a, b)
-		end)
-	else
-		table_sort(sorted, sortFallback)
-	end
-
-	return sorted
+	table.sort(list, callback)
+	return list
 end
 
 TS.array_toString = toString
@@ -558,8 +536,7 @@ end
 
 function TS.array_some(list, callback)
 	for i = 1, #list do
-		local v = list[i]
-		if v ~= nil and callback(v, i - 1, list) == true then
+		if callback(list[i], i - 1, list) == true then
 			return true
 		end
 	end
@@ -568,8 +545,7 @@ end
 
 function TS.array_every(list, callback)
 	for i = 1, #list do
-		local v = list[i]
-		if v ~= nil and callback(v, i - 1, list) == false then
+		if not callback(list[i], i - 1, list) then
 			return false
 		end
 	end
@@ -613,34 +589,42 @@ function TS.array_reverse(list)
 	return result
 end
 
-function TS.array_reduce(list, callback, initialValue)
-	local start = 1
-	if initialValue == nil then
-		initialValue = list[start]
-		start = 2
-	end
-	local accumulator = initialValue
-	for i = start, #list do
-		local v = list[i]
-		if v ~= nil then
-			accumulator = callback(accumulator, v, i)
+function TS.array_reduce(list, callback, ...)
+	local first = 1
+	local last = #list
+	local accumulator
+	-- support `nil` initialValues
+	if select("#", ...) == 0 then
+		if last == 0 then
+			error("Reduce of empty array with no initial value at Array.reduce", 2)
 		end
+		accumulator = list[first]
+		first = first + 1
+	else
+		accumulator = ...
+	end
+	for i = first, last do
+		accumulator = callback(accumulator, list[i], i - 1, list)
 	end
 	return accumulator
 end
 
-function TS.array_reduceRight(list, callback, initialValue)
-	local start = #list
-	if initialValue == nil then
-		initialValue = list[start]
-		start = start - 1
-	end
-	local accumulator = initialValue
-	for i = start, 1, -1 do
-		local v = list[i]
-		if v ~= nil then
-			accumulator = callback(accumulator, v, i)
+function TS.array_reduceRight(list, callback, ...)
+	local first = #list
+	local last = 1
+	local accumulator
+	-- support `nil` initialValues
+	if select("#", ...) == 0 then
+		if first == 0 then
+			error("Reduce of empty array with no initial value at Array.reduceRight", 2)
 		end
+		accumulator = list[first]
+		first = first - 1
+	else
+		accumulator = ...
+	end
+	for i = first, last, -1 do
+		accumulator = callback(accumulator, list[i], i - 1, list)
 	end
 	return accumulator
 end
@@ -688,16 +672,7 @@ function TS.array_concat(...)
 end
 
 function TS.array_join(list, separator)
-	local result = {}
-	for i = 1, #list do
-		local item = list[i]
-		if item == nil then
-			result[i] = ""
-		else
-			result[i] = tostring(list[i])
-		end
-	end
-	return table_concat(result, separator or ",")
+	return table.concat(array_map(list, tostring), separator or ",")
 end
 
 function TS.array_find(list, callback)
@@ -722,18 +697,11 @@ local function array_flat_helper(list, depth, count, result)
 	for i = 1, #list do
 		local v = list[i]
 
-		if v ~= nil then
-			if type(v) == "table" then
-				if depth ~= 0 then
-					count = array_flat_helper(v, depth - 1, count, result)
-				else
-					count = count + 1
-					result[count] = v
-				end
-			else
-				count = count + 1
-				result[count] = v
-			end
+		if type(v) == "table" and depth ~= 0 then
+			count = array_flat_helper(v, depth - 1, count, result)
+		else
+			count = count + 1
+			result[count] = v
 		end
 	end
 
@@ -809,9 +777,11 @@ TS.array_deepEquals = deepEquals
 
 function TS.map_new(pairs)
 	local result = {}
-	for i = 1, #pairs do
-		local pair = pairs[i]
-		result[pair[1]] = pair[2]
+	if pairs then
+		for i = 1, #pairs do
+			local pair = pairs[i]
+			result[pair[1]] = pair[2]
+		end
 	end
 	return result
 end
@@ -848,8 +818,10 @@ TS.map_toString = toString
 
 function TS.set_new(values)
 	local result = {}
-	for i = 1, #values do
-		result[values[i]] = true
+	if values then
+		for i = 1, #values do
+			result[values[i]] = true
+		end
 	end
 	return result
 end
@@ -923,6 +895,17 @@ TS.set_size = getNumKeys
 
 TS.set_toString = toString
 
+-- spread cache functions
+function TS.string_spread(str)
+	local results = {}
+	local count = 0
+	for char in string.gmatch(str, "[%z\1-\127\194-\244][\128-\191]*") do
+		count = count + 1
+		results[count] = char
+	end
+	return results
+end
+
 function TS.iterableCache(iter)
 	local results = {}
 	local count = 0
@@ -984,74 +967,6 @@ function TS.opcall(func, ...)
 			error = valueOrErr,
 		}
 	end
-end
-
--- try catch utilities
-
-local function pack(...)
-	return { size = select("#", ...), ... }
-end
-
-local throwStack = {}
-
-function TS.throw(value)
-	if #throwStack > 0 then
-		throwStack[#throwStack](value)
-	else
-		error("Uncaught " .. tostring(value), 2)
-	end
-end
-
-function TS.try(tryCallback, catchCallback)
-	local done = false
-	local yielded = false
-	local popped = false
-	local resumeThread = coroutine.running()
-
-	local returns
-
-	local function pop()
-		if not popped then
-			popped = true
-			throwStack[#throwStack] = nil
-		end
-	end
-
-	local function resume()
-		if yielded then
-			local success, errorMsg = coroutine.resume(resumeThread)
-			if not success then
-				warn(errorMsg)
-			end
-		else
-			done = true
-		end
-	end
-
-	local function throw(value)
-		pop()
-		if catchCallback then
-			returns = pack(catchCallback(value))
-		end
-		resume()
-		coroutine.yield()
-	end
-
-	throwStack[#throwStack + 1] = throw
-
-	coroutine.wrap(function()
-		returns = pack(tryCallback())
-		resume()
-	end)()
-
-	if not done then
-		yielded = true
-		coroutine.yield()
-	end
-
-	pop()
-
-	return returns
 end
 
 return TS

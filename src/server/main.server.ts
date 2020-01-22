@@ -5,6 +5,7 @@ import { Workspace, Players, ReplicatedStorage } from "@rbxts/services";
 import DataStore2 = require("@rbxts/datastore2");
 import buildData from "shared/DataBuild"
 import raceManager from "shared/raceManager";
+import Net from "@rbxts/net";
 
 type RaceNames = Exclude<keyof typeof races, "isPerson">;
 type AnyRace = ReturnType<typeof races[keyof typeof races]>;
@@ -15,11 +16,16 @@ interface UserGameData {
 }
 
 let mapping = new Map<string, UserGameData>();
+const myRemote = new Net.ServerEvent("EventName");
+myRemote.Connect((plr: Player, message)=>{
+    print(`${message}`);
+})
+
 
 Players.PlayerAdded.Connect(plr => {
     const DataBuild = new buildData(plr);
     // dataStore.Set(ar2);
-
+    myRemote.SendToPlayer(plr,"HII!");
     plr.CharacterAdded.Connect((char: Model) => {
         const race = buildRace<Array<RaceNames>>(plr, ...DataBuild.getTraits()) as AnyRace;
         mapping.set(tostring(plr.UserId), {db: DataBuild, race});

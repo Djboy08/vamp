@@ -1,9 +1,9 @@
--- Compiled with https://roblox-ts.github.io v0.2.14
--- January 22, 2020, 3:47 AM Eastern Standard Time
+-- Compiled with https://roblox-ts.github.io v0.3.0
+-- January 22, 2020, 4:45 AM Eastern Standard Time
 
 local TS = require(game:GetService("ReplicatedStorage"):WaitForChild("rbxts_include"):WaitForChild("RuntimeLib"));
 local exports = {};
-local races = TS.import(game:GetService("ReplicatedStorage"), "TS", "races");
+local DataStore2 = TS.import(script, TS.getModule(script, "datastore2").src);
 local raceMoves;
 do
 	raceMoves = setmetatable({}, {
