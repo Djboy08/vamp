@@ -11,15 +11,12 @@ export default class buildData {
         this.player = plr;
         this.traits = DataStore2<Array<RaceNames>>("Traits7", plr);
         this.ar = this.traits.Get([]) as Array<RaceNames>;
-        this.ar.push("isCombatter");
         this.removeDuplicates();
         this.set();
     }
 
     removeDuplicates(){
-        this.ar = this.ar.filter(function(elem, index, self) {
-            return index === self.indexOf(elem);
-        })
+        this.ar = [...new Set(this.ar)];
     }
     // @OVERRIDE
     toString(){

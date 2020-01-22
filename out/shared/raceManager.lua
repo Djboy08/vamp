@@ -1,9 +1,10 @@
 -- Compiled with https://roblox-ts.github.io v0.2.14
--- January 22, 2020, 12:02 AM Eastern Standard Time
+-- January 22, 2020, 12:51 AM Eastern Standard Time
 
 local TS = require(game:GetService("ReplicatedStorage"):WaitForChild("rbxts_include"):WaitForChild("RuntimeLib"));
 local exports = {};
 local races = TS.import(game:GetService("ReplicatedStorage"), "TS", "races");
+local raceMoves = TS.import(game:GetService("ReplicatedStorage"), "TS", "raceMoves").default;
 local raceManager;
 do
 	raceManager = setmetatable({}, {
@@ -20,20 +21,7 @@ do
 		local player = _0.player;
 		self.race = race;
 		self.player = player;
-		if race["punch"] ~= nil then
-			race:punch();
-		end;
-		if race["feed"] ~= nil then
-			race:feed();
-		end;
-		if race["compulse"] ~= nil then
-			if player.Character then
-				race:compulse(player.Character);
-			end;
-		end;
-		if race["heal"] ~= nil then
-			race:heal();
-		end;
+		self.moveManager = raceMoves.new(self.race);
 	end;
 end;
 exports.default = raceManager;

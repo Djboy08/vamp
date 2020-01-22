@@ -1,5 +1,5 @@
 -- Compiled with https://roblox-ts.github.io v0.2.14
--- January 22, 2020, 12:07 AM Eastern Standard Time
+-- January 22, 2020, 12:12 AM Eastern Standard Time
 
 local TS = require(game:GetService("ReplicatedStorage"):WaitForChild("rbxts_include"):WaitForChild("RuntimeLib"));
 local exports = {};
@@ -20,15 +20,12 @@ do
 		self.player = plr;
 		self.traits = DataStore2("Traits7", plr);
 		self.ar = self.traits:Get({});
-		local _0 = self.ar;
-		_0[#_0 + 1] = "isCombatter";
 		self:removeDuplicates();
 		self:set();
 	end;
 	function buildData:removeDuplicates()
-		self.ar = TS.array_filter(self.ar, function(elem, index, self)
-			return index == TS.array_indexOf(self, elem);
-		end);
+		local _0 = TS.set_new(self.ar);
+		self.ar = TS.set_values(_0);
 	end;
 	function buildData:toString()
 		local str = "Player: " .. self.player.Name .. "\nTraits: " .. TS.array_toString(self.ar);
