@@ -18,29 +18,43 @@ export default class raceManager {
     public static mapping: Map<string, UserGameData> = new Map<string, UserGameData>();
     // public moveManager: raceMoves;
     constructor(){
-
         let connection = remote.Connect((plr: Player, ...[msg])=>{
             const UserData = raceManager.mapping.get(tostring(plr.UserId)) as UserGameData;
             if(msg === 'dash' && "dash" in UserData.race){
                 UserData.race.dash();
             }
         })
-
-
-
-        // let root = player.Character ? player.Character.FindFirstChildOfClass("Humanoid") : undefined;
-        // if(root){
-        //     let c: RBXScriptConnection;
-            
-        //     c = player.CharacterRemoving.Connect(()=>{
-        //         connection.Disconnect();
-        //         c.Disconnect();
-        //     })
-        // }
-        // this.moveManager = new raceMoves(this.race);
     }
 
-    add({race, player, DataBuild}: {race: AnyRace, player: Player, DataBuild: buildData}){
+    public add({race, player, DataBuild}: {race: AnyRace, player: Player, DataBuild: buildData}){
         raceManager.mapping.set(tostring(player.UserId), {db: DataBuild, race});
     }
 }
+
+
+
+
+// CHECK SKILLTREE PSUDO STUFF BELOW
+        //left = what you need to unlock right
+// function checkSkillTree(){
+//     let x = [   ['A','B'],
+//                 ['C','B'],
+//                 ['D','B'],
+//                 ['F','A']];
+//     let finding = 'A';
+//     let have = ['A','C','D', 'F'];
+//     for(let i = 0; i < x.size(); i++){
+//         let [unlocker, unlockee] = x[i];
+//         let check = false;
+//         if(unlockee === finding){
+//             for(let j = 0; j < have.size(); j++){
+//                 if(unlocker === have[j]){
+//                     check = true;
+//                 }
+//             }
+//             if(!check) return false;
+//         }
+//     }
+//     return true;
+// }
+
