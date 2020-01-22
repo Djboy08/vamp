@@ -3,33 +3,50 @@ import DataStore2 = require("@rbxts/datastore2");
 import * as races from "shared/races"
 type RaceNames = Exclude<keyof typeof races, "isPerson">;
 
+interface Data {
+    traits: Array<RaceNames>;
+    skills: Array<string>;
+}
+
 export default class buildData {
-    public ar: Array<RaceNames>;
-    public traits: DataStore2<Array<RaceNames>>;
-    private player: Player;
+    public dataDS: DataStore2<Data>;
+    public player: Player;
+
+    public data: Data;
+
     constructor(plr: Player){
         this.player = plr;
-        this.traits = DataStore2<Array<RaceNames>>("Traits8", plr);
-        this.ar = this.traits.Get([]) as Array<RaceNames>;
+        this.dataDS = DataStore2<Data>("Data1", plr);
+        let d = this.dataDS.Get({
+            traits: [],
+            skills: []
+        });
+
+        this.data = {
+            traits: d.traits,
+            skills: d.skills
+        }
+
         this.removeDuplicates();
         this.set();
     }
 
     removeDuplicates(){
-        this.ar = [...new Set(this.ar)];
+        this.data.traits = [...new Set(this.data.traits)];
+        this.data.skills = [...new Set(this.data.skills)];
     }
     // @OVERRIDE
     toString(){
-        let str: string = `Player: ${this.player.Name}\nTraits: ${this.ar.toString()}`;
+        let str: string = `Player: ${this.player.Name}\nTraits: ${this.data.traits.toString()}\nSkills: ${this.data.skills.toString()}`;
         return str;
     }
     addTraits(...traits: Array<RaceNames>){
-        const temp_set: Set<RaceNames> = new Set(this.ar);
+        const temp_set: Set<RaceNames> = new Set(this.data.traits);
 
         for(let i = 0; i < traits.size(); i++){
             print(`is ${traits[i]} in their traits? = ${temp_set.has(traits[i])}`)
             if(!temp_set.has(traits[i])){
-                this.ar.push(traits[i]);
+                this.data.traits.push(traits[i]);
                 warn(`Giving player ${this.player.Name} the trait ${traits[i]}`)
             }else{
                 // error(`Player ${this.player.Name} Already has this trait!`);
@@ -40,7 +57,7 @@ export default class buildData {
         this.set();
     }
     removeTraits(...traits: Array<RaceNames>){
-        let temp_set: Set<RaceNames> = new Set(this.ar);
+        let temp_set: Set<RaceNames> = new Set(this.data.traits);
         for(let i = 0; i < traits.size(); i++){
             if(temp_set.has(traits[i])){
                temp_set.delete(traits[i]); 
@@ -48,15 +65,19 @@ export default class buildData {
                 // error(`This trait can not be removed because its not in their traits list.`);
             }
         }
-        this.ar = [...temp_set];
+        this.data.traits = [...temp_set];
         // this.removeDuplicates();
         this.set();
     }
     set(){
-        this.traits.Set(this.ar);
+        this.data = {
+            traits: this.data.traits,
+            skills: this.data.skills
+        }
+        this.dataDS.Set(this.data);
     }
     
     getTraits(): Array<RaceNames> {
-        return this.ar;
+        return this.data.traits;
     }
 }
