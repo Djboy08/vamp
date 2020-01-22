@@ -1,5 +1,5 @@
 import Net from "@rbxts/net";
-import { Players, UserInputService, Lighting, Workspace } from "@rbxts/services";
+import { Players, UserInputService, Lighting, Workspace, ReplicatedStorage, Debris } from "@rbxts/services";
 import inspect = require("@rbxts/inspect");
 
 // (async function init(){
@@ -34,7 +34,12 @@ remote.Connect((msg: string, plr: Player)=>{
                     print(inspect(part[0]));
                 }else{
                     // not blocking sun
-                    remote.SendToServer("sun_damage");
+                    if(plr === Players.LocalPlayer){
+                        remote.SendToServer("sun_damage");
+                    }
+                    let asset = (ReplicatedStorage.FindFirstChild("Fire") as Fire).Clone();
+                    asset.Parent = plr.Character ? plr.Character.FindFirstChild("HumanoidRootPart") : undefined;
+                    Debris.AddItem(asset, 3);
                 }
             }   
             wait(3);

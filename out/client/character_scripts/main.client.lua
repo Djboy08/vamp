@@ -1,10 +1,10 @@
 -- Compiled with https://roblox-ts.github.io v0.3.0
--- January 22, 2020, 4:25 PM Eastern Standard Time
+-- January 22, 2020, 5:17 PM Eastern Standard Time
 
 local TS = require(game:GetService("ReplicatedStorage"):WaitForChild("rbxts_include"):WaitForChild("RuntimeLib"));
 local Net = TS.import(script, TS.getModule(script, "net").out);
 local _0 = TS.import(script, TS.getModule(script, "services"));
-local Players, UserInputService, Lighting, Workspace = _0.Players, _0.UserInputService, _0.Lighting, _0.Workspace;
+local Players, UserInputService, Lighting, Workspace, ReplicatedStorage, Debris = _0.Players, _0.UserInputService, _0.Lighting, _0.Workspace, _0.ReplicatedStorage, _0.Debris;
 local inspect = TS.import(script, TS.getModule(script, "inspect").inspect);
 local remote = Net.ClientEvent.new("movesEvent");
 UserInputService.InputBegan:Connect(function(inputObject, gameProcessedEvent)
@@ -39,7 +39,16 @@ remote:Connect(function(msg, plr)
 				if part[1] then
 					print(inspect(part[1]));
 				else
-					remote:SendToServer("sun_damage");
+					if plr == Players.LocalPlayer then
+						remote:SendToServer("sun_damage");
+					end;
+					local asset = ReplicatedStorage:FindFirstChild("Fire"):Clone();
+					if plr.Character then
+						asset.Parent = plr.Character:FindFirstChild("HumanoidRootPart");
+					else
+						asset.Parent = nil;
+					end;
+					Debris:AddItem(asset, 3);
 				end;
 			end;
 			wait(3);
