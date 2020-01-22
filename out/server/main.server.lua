@@ -1,5 +1,5 @@
 -- Compiled with https://roblox-ts.github.io v0.3.0
--- January 22, 2020, 6:07 AM Eastern Standard Time
+-- January 22, 2020, 9:28 AM Eastern Standard Time
 
 local TS = require(game:GetService("ReplicatedStorage"):WaitForChild("rbxts_include"):WaitForChild("RuntimeLib"));
 local buildRace = TS.import(script, game:GetService("ReplicatedStorage"), "TS", "buildRace").buildRace;
@@ -9,20 +9,16 @@ local DataStore2 = TS.import(script, TS.getModule(script, "datastore2").src);
 local buildData = TS.import(script, game:GetService("ReplicatedStorage"), "TS", "DataBuild").default;
 local raceManager = TS.import(script, game:GetService("ReplicatedStorage"), "TS", "raceManager").default;
 local Net = TS.import(script, TS.getModule(script, "net").out);
-local mapping = {};
 local myRemote = Net.ServerEvent.new("movesEvent");
 Players.PlayerAdded:Connect(function(plr)
 	local DataBuild = buildData.new(plr);
 	plr.CharacterAdded:Connect(function(char)
 		local race = buildRace(plr, myRemote, unpack(DataBuild:getTraits()));
-		mapping[tostring(plr.UserId)] = {
-			db = DataBuild;
-			race = race;
-		};
 		warn(DataBuild:toString());
 		local race_manager = raceManager.new({
 			race = race;
 			player = plr;
+			DataBuild = DataBuild;
 		});
 		local humanoid = char:FindFirstChildOfClass("Humanoid");
 		if humanoid then
@@ -48,13 +44,13 @@ if traitsModel then
 					repeat
 						if _2 == "add" then
 							print("Adding");
-							mapping[tostring(P.UserId)].db:addTraits(t);
+							raceManager.mapping[tostring(P.UserId)].db:addTraits(t);
 							P:LoadCharacter();
 							break;
 						end;
 						if _2 == "rem" then
 							print("removing");
-							mapping[tostring(P.UserId)].db:removeTraits(t);
+							raceManager.mapping[tostring(P.UserId)].db:removeTraits(t);
 							P:LoadCharacter();
 							break;
 						end;

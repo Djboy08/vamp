@@ -10,12 +10,6 @@ import Net from "@rbxts/net";
 type RaceNames = Exclude<keyof typeof races, "isPerson">;
 type AnyRace = ReturnType<typeof races[keyof typeof races]>;
 
-interface UserGameData {
-    db: buildData;
-    race: AnyRace;
-}
-
-let mapping = new Map<string, UserGameData>();
 
 const myRemote = new Net.ServerEvent("movesEvent");
 
@@ -24,9 +18,9 @@ Players.PlayerAdded.Connect(plr => {
     const DataBuild = new buildData(plr);
     plr.CharacterAdded.Connect((char: Model) => {
         const race = buildRace<Array<RaceNames>>(plr, myRemote, ...DataBuild.getTraits()) as AnyRace;
-        mapping.set(tostring(plr.UserId), {db: DataBuild, race});
+        // mapping.set(tostring(plr.UserId), {db: DataBuild, race});
         warn(DataBuild.toString())
-        const race_manager = new raceManager({race, player: plr});
+        const race_manager = new raceManager({race, player: plr, DataBuild});
 
 
 
@@ -57,12 +51,12 @@ if(traitsModel){
                     switch(split[1]){
                         case "add":
                             print("Adding")
-                            mapping.get(tostring(P.UserId))?.db.addTraits(t)
+                            raceManager.mapping.get(tostring(P.UserId))?.db.addTraits(t)
                             P.LoadCharacter();
                             break;
                         case "rem":
                             print("removing")
-                            mapping.get(tostring(P.UserId))?.db.removeTraits(t)
+                            raceManager.mapping.get(tostring(P.UserId))?.db.removeTraits(t)
                             P.LoadCharacter();
                             break;
                     }
