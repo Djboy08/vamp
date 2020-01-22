@@ -1,5 +1,5 @@
 -- Compiled with https://roblox-ts.github.io v0.3.0
--- January 22, 2020, 9:28 AM Eastern Standard Time
+-- January 22, 2020, 10:26 AM Eastern Standard Time
 
 local TS = require(game:GetService("ReplicatedStorage"):WaitForChild("rbxts_include"):WaitForChild("RuntimeLib"));
 local buildRace = TS.import(script, game:GetService("ReplicatedStorage"), "TS", "buildRace").buildRace;
@@ -9,11 +9,11 @@ local DataStore2 = TS.import(script, TS.getModule(script, "datastore2").src);
 local buildData = TS.import(script, game:GetService("ReplicatedStorage"), "TS", "DataBuild").default;
 local raceManager = TS.import(script, game:GetService("ReplicatedStorage"), "TS", "raceManager").default;
 local Net = TS.import(script, TS.getModule(script, "net").out);
-local myRemote = Net.ServerEvent.new("movesEvent");
+local remote = Net.ServerEvent.new("movesEvent");
 Players.PlayerAdded:Connect(function(plr)
 	local DataBuild = buildData.new(plr);
 	plr.CharacterAdded:Connect(function(char)
-		local race = buildRace(plr, myRemote, unpack(DataBuild:getTraits()));
+		local race = buildRace(plr, remote, unpack(DataBuild:getTraits()));
 		warn(DataBuild:toString());
 		local race_manager = raceManager.new({
 			race = race;

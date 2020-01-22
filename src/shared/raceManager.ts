@@ -3,13 +3,16 @@ import DataStore2 = require("@rbxts/datastore2");
 import * as races from "shared/races"
 import raceMoves from "shared/raceMoves"
 import buildData from "shared/DataBuild"
+import Net from "@rbxts/net";
 
 type RaceNames = Exclude<keyof typeof races, "isPerson">;
 type AnyRace = ReturnType<typeof races[keyof typeof races]>;
-interface UserGameData {
+export interface UserGameData {
     db: buildData;
     race: AnyRace;
+    
 }
+const remote = new Net.ServerEvent("movesEvent");
 
 export default class raceManager {
 
@@ -22,6 +25,24 @@ export default class raceManager {
         this.race = race;
         this.player = player;
         raceManager.mapping.set(tostring(player.UserId), {db: DataBuild, race});
+
+        let connection = remote.Connect((plr: Player, ...[msg])=>{
+            if(msg === 'dash' && "dash" in this.race){
+                this.race.dash();
+            }
+        })
+
+
+        
+        let root = player.Character ? player.Character.FindFirstChildOfClass("Humanoid") : undefined;
+        if(root){
+            let c: RBXScriptConnection;
+            
+            c = player.CharacterRemoving.Connect(()=>{
+                connection.Disconnect();
+                c.Disconnect();
+            })
+        }
         // this.moveManager = new raceMoves(this.race);
     }
 }

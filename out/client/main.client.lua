@@ -1,11 +1,19 @@
 -- Compiled with https://roblox-ts.github.io v0.3.0
--- January 22, 2020, 5:16 AM Eastern Standard Time
+-- January 22, 2020, 10:15 AM Eastern Standard Time
 
 local TS = require(game:GetService("ReplicatedStorage"):WaitForChild("rbxts_include"):WaitForChild("RuntimeLib"));
 local Net = TS.import(script, TS.getModule(script, "net").out);
-TS.async(function()
-	local exampleClientTwo = Net.ClientEvent.new("movesEvent");
-	exampleClientTwo:Connect(function(plr, msg)
-		print(plr.Name, msg);
-	end);
-end)();
+local UserInputService = TS.import(script, TS.getModule(script, "services")).UserInputService;
+local remote = Net.ClientEvent.new("movesEvent");
+UserInputService.InputBegan:Connect(function(inputObject, gameProcessedEvent)
+	if inputObject.UserInputType == Enum.UserInputType.Keyboard then
+		local key = inputObject.KeyCode;
+		if key == Enum.KeyCode.Q then
+			print('sent');
+			remote:SendToServer("dash");
+		end;
+	end;
+end);
+remote:Connect(function(msg)
+	print(msg, "doin effects yo!");
+end);

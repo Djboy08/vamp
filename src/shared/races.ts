@@ -1,6 +1,6 @@
 import compose from "@rbxts/object-composer";
 import NetServerEvent from "@rbxts/net/out/ServerEvent";
-import { Workspace, Players, ReplicatedStorage } from "@rbxts/services";
+import { Workspace, Players, ReplicatedStorage, Debris } from "@rbxts/services";
 
 export const isFeeder = ({player}: {player: Player}) => {
     let asset = ReplicatedStorage.FindFirstChild("BanHammar");
@@ -51,6 +51,24 @@ export const isRegenerator = () => ({
         print("HEALED!!")
     }
 });
+
+export const isDasher = ({player, remote}: {player: Player, remote: NetServerEvent}) => {
+    
+    return ({
+        dash(){
+            let root = player.Character ? player.Character.FindFirstChild("HumanoidRootPart") as BasePart : undefined;
+            if(root){
+                let vel = new Instance("BodyVelocity") as BodyVelocity;
+                vel.Name = "BV";
+                vel.MaxForce = new Vector3(math.huge, math.huge, math.huge);
+                vel.Velocity = root.CFrame.LookVector.mul(250);
+                vel.Parent = root;
+                Debris.AddItem(vel, 0.05);
+                remote.SendToAllPlayers("dashed!");
+            }
+        }
+    });
+};
 
 export const isVampire = compose(
     isFeeder,

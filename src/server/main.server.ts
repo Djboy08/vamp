@@ -11,18 +11,18 @@ type RaceNames = Exclude<keyof typeof races, "isPerson">;
 type AnyRace = ReturnType<typeof races[keyof typeof races]>;
 
 
-const myRemote = new Net.ServerEvent("movesEvent");
+const remote = new Net.ServerEvent("movesEvent");
 
 
 Players.PlayerAdded.Connect(plr => {
     const DataBuild = new buildData(plr);
     plr.CharacterAdded.Connect((char: Model) => {
-        const race = buildRace<Array<RaceNames>>(plr, myRemote, ...DataBuild.getTraits()) as AnyRace;
+        const race = buildRace<Array<RaceNames>>(plr, remote, ...DataBuild.getTraits()) as AnyRace;
         // mapping.set(tostring(plr.UserId), {db: DataBuild, race});
         warn(DataBuild.toString())
         const race_manager = new raceManager({race, player: plr, DataBuild});
-
-
+        
+        
 
         //Manages them reloading if they die.
         let humanoid = char.FindFirstChildOfClass("Humanoid");
