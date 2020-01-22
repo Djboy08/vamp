@@ -1,5 +1,5 @@
 -- Compiled with https://roblox-ts.github.io v0.3.0
--- January 22, 2020, 10:26 AM Eastern Standard Time
+-- January 22, 2020, 10:35 AM Eastern Standard Time
 
 local TS = require(game:GetService("ReplicatedStorage"):WaitForChild("rbxts_include"):WaitForChild("RuntimeLib"));
 local exports = {};
@@ -31,8 +31,9 @@ do
 		local connection = remote:Connect(function(plr, ...)
 			local _2 = { ... };
 			local msg = _2[1];
-			if (msg == 'dash') and (self.race["dash"] ~= nil) then
-				self.race:dash();
+			local r = raceManager.mapping[tostring(plr.UserId)];
+			if (msg == 'dash') and (r.race["dash"] ~= nil) then
+				r.race:dash();
 			end;
 		end);
 		local root;

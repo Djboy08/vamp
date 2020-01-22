@@ -27,13 +27,14 @@ export default class raceManager {
         raceManager.mapping.set(tostring(player.UserId), {db: DataBuild, race});
 
         let connection = remote.Connect((plr: Player, ...[msg])=>{
-            if(msg === 'dash' && "dash" in this.race){
-                this.race.dash();
+            let r = raceManager.mapping.get(tostring(plr.UserId)) as UserGameData;
+            if(msg === 'dash' && "dash" in r.race){
+                r.race.dash();
             }
         })
 
 
-        
+
         let root = player.Character ? player.Character.FindFirstChildOfClass("Humanoid") : undefined;
         if(root){
             let c: RBXScriptConnection;
