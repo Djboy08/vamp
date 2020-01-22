@@ -12,15 +12,15 @@ type AnyRace = ReturnType<typeof races[keyof typeof races]>;
 
 
 const remote = new Net.ServerEvent("movesEvent");
-
+const race_manager = new raceManager();
 
 Players.PlayerAdded.Connect(plr => {
     const DataBuild = new buildData(plr);
     plr.CharacterAdded.Connect((char: Model) => {
         const race = buildRace<Array<RaceNames>>(plr, remote, ...DataBuild.getTraits()) as AnyRace;
+        race_manager.add({race, player: plr, DataBuild});
         // mapping.set(tostring(plr.UserId), {db: DataBuild, race});
         warn(DataBuild.toString())
-        const race_manager = new raceManager({race, player: plr, DataBuild});
         
         
 

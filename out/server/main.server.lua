@@ -1,5 +1,5 @@
 -- Compiled with https://roblox-ts.github.io v0.3.0
--- January 22, 2020, 10:35 AM Eastern Standard Time
+-- January 22, 2020, 10:46 AM Eastern Standard Time
 
 local TS = require(game:GetService("ReplicatedStorage"):WaitForChild("rbxts_include"):WaitForChild("RuntimeLib"));
 local buildRace = TS.import(script, game:GetService("ReplicatedStorage"), "TS", "buildRace").buildRace;
@@ -10,16 +10,17 @@ local buildData = TS.import(script, game:GetService("ReplicatedStorage"), "TS", 
 local raceManager = TS.import(script, game:GetService("ReplicatedStorage"), "TS", "raceManager").default;
 local Net = TS.import(script, TS.getModule(script, "net").out);
 local remote = Net.ServerEvent.new("movesEvent");
+local race_manager = raceManager.new();
 Players.PlayerAdded:Connect(function(plr)
 	local DataBuild = buildData.new(plr);
 	plr.CharacterAdded:Connect(function(char)
 		local race = buildRace(plr, remote, unpack(DataBuild:getTraits()));
-		warn(DataBuild:toString());
-		local race_manager = raceManager.new({
+		race_manager:add({
 			race = race;
 			player = plr;
 			DataBuild = DataBuild;
 		});
+		warn(DataBuild:toString());
 		local humanoid = char:FindFirstChildOfClass("Humanoid");
 		if humanoid then
 			humanoid.Died:Connect(function()

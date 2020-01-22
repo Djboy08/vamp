@@ -1,5 +1,5 @@
 -- Compiled with https://roblox-ts.github.io v0.3.0
--- January 22, 2020, 10:35 AM Eastern Standard Time
+-- January 22, 2020, 10:46 AM Eastern Standard Time
 
 local TS = require(game:GetService("ReplicatedStorage"):WaitForChild("rbxts_include"):WaitForChild("RuntimeLib"));
 local exports = {};
@@ -17,38 +17,25 @@ do
 		self:constructor(...);
 		return self;
 	end;
-	function raceManager:constructor(_0)
+	function raceManager:constructor()
+		local connection = remote:Connect(function(plr, ...)
+			local _0 = { ... };
+			local msg = _0[1];
+			local UserData = raceManager.mapping[tostring(plr.UserId)];
+			if (msg == 'dash') and (UserData.race["dash"] ~= nil) then
+				UserData.race:dash();
+			end;
+		end);
+	end;
+	function raceManager:add(_0)
 		local race = _0.race;
 		local player = _0.player;
 		local DataBuild = _0.DataBuild;
-		self.race = race;
-		self.player = player;
 		local _1 = raceManager.mapping;
 		_1[tostring(player.UserId)] = {
 			db = DataBuild;
 			race = race;
 		};
-		local connection = remote:Connect(function(plr, ...)
-			local _2 = { ... };
-			local msg = _2[1];
-			local r = raceManager.mapping[tostring(plr.UserId)];
-			if (msg == 'dash') and (r.race["dash"] ~= nil) then
-				r.race:dash();
-			end;
-		end);
-		local root;
-		if player.Character then
-			root = player.Character:FindFirstChildOfClass("Humanoid");
-		else
-			root = nil;
-		end;
-		if root then
-			local c;
-			c = player.CharacterRemoving:Connect(function()
-				connection:Disconnect();
-				c:Disconnect();
-			end);
-		end;
 	end;
 	raceManager.mapping = {};
 end;
