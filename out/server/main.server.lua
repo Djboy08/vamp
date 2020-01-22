@@ -1,7 +1,8 @@
 -- Compiled with https://roblox-ts.github.io v0.3.0
--- January 22, 2020, 4:20 PM Eastern Standard Time
+-- January 22, 2020, 5:09 PM Eastern Standard Time
 
 local TS = require(game:GetService("ReplicatedStorage"):WaitForChild("rbxts_include"):WaitForChild("RuntimeLib"));
+local waitForObjectParent;
 local buildRace = TS.import(script, game:GetService("ReplicatedStorage"), "TS", "buildRace").buildRace;
 local _0 = TS.import(script, TS.getModule(script, "services"));
 local Workspace, Players = _0.Workspace, _0.Players;
@@ -13,6 +14,7 @@ local race_manager = raceManager.new();
 Players.PlayerAdded:Connect(function(plr)
 	local DataBuild = buildData.new(plr);
 	plr.CharacterAdded:Connect(function(char)
+		waitForObjectParent(char, plr);
 		local race = buildRace(plr, remote, unpack(DataBuild:combineTraitsAndRace()));
 		race_manager:add({
 			race = race;
@@ -32,6 +34,11 @@ Players.PlayerAdded:Connect(function(plr)
 	end);
 	plr:LoadCharacter();
 end);
+waitForObjectParent = function(obj, p)
+	if not (obj:IsDescendantOf(game)) then
+		obj.AncestryChanged:Wait();
+	end;
+end;
 local traitsModel = Workspace:FindFirstChild("Traits");
 if traitsModel then
 	local children = traitsModel:GetChildren();

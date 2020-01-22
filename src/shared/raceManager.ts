@@ -2,7 +2,7 @@ import { Workspace, Players, ReplicatedStorage } from "@rbxts/services";
 import * as races from "shared/traits"
 import buildData from "shared/DataBuild"
 import Net from "@rbxts/net";
-
+import inspect from "@rbxts/inspect"
 type RaceNames = Exclude<keyof typeof races, "isPerson">;
 type AnyRace = ReturnType<typeof races[keyof typeof races]>;
 export interface UserGameData {

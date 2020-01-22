@@ -4,6 +4,7 @@ import { Workspace, Players, ReplicatedStorage } from "@rbxts/services";
 import buildData from "shared/DataBuild"
 import raceManager from "shared/raceManager";
 import Net from "@rbxts/net";
+import inspect from "@rbxts/inspect"
 
 
 type RaceNames = Exclude<keyof typeof races, "isPerson">;
@@ -15,10 +16,8 @@ const race_manager = new raceManager();
 
 Players.PlayerAdded.Connect(plr => {
     const DataBuild = new buildData(plr);
-    
     plr.CharacterAdded.Connect((char: Model) => {
-        // wait(1)
-        // print();
+        waitForObjectParent(char, plr)
         const race: AnyRace = buildRace<Array<RaceNames>>(plr, remote, ...DataBuild.combineTraitsAndRace()) as AnyRace;
         race_manager.add({race, player: plr, DataBuild});
         // mapping.set(tostring(plr.UserId), {db: DataBuild, race});
@@ -40,6 +39,11 @@ Players.PlayerAdded.Connect(plr => {
 
 });
 
+const waitForObjectParent =<T extends Instance> (obj: T, p: Player) => {
+    if(!obj.IsDescendantOf(game)){
+        obj.AncestryChanged.Wait();
+    }
+}
 
 // buttons for giving people or removing traits
 let traitsModel = Workspace.FindFirstChild("Traits");
