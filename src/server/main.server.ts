@@ -35,19 +35,20 @@ Players.PlayerAdded.Connect(plr => {
             for(let obj of children){
                 if(obj.IsA("Part")){
                     obj.Touched.Connect((part)=>{
-                        if(part.Parent && part.Parent.ClassName === "Model"){
+                        if(part.Parent && part.Parent.IsA("Model")){
                             let split = obj.Name.split(`:`);
                             let t = split[0] as RaceNames;
+                            let P = Players.GetPlayerFromCharacter(part.Parent) as Player;
                             switch(split[1]){
                                 case "add":
                                     print("Adding")
-                                    DataBuild.addTraits(t);
-                                    plr.LoadCharacter();
+                                    mapping.get(tostring(P.UserId))?.db.addTraits(t)
+                                    P.LoadCharacter();
                                     break;
                                 case "rem":
                                     print("removing")
-                                    DataBuild.removeTraits(t);
-                                    plr.LoadCharacter();
+                                    mapping.get(tostring(P.UserId))?.db.removeTraits(t)
+                                    P.LoadCharacter();
                                     break;
                             }
                         }
