@@ -1,5 +1,5 @@
 -- Compiled with https://roblox-ts.github.io v0.2.14
--- January 21, 2020, 7:09 PM Eastern Standard Time
+-- January 21, 2020, 11:12 PM Eastern Standard Time
 
 local TS = require(game:GetService("ReplicatedStorage"):WaitForChild("rbxts_include"):WaitForChild("RuntimeLib"));
 local exports = {};
@@ -17,16 +17,9 @@ do
 		return self;
 	end;
 	function buildData:constructor(plr)
+		self.player = plr;
 		self.traits = DataStore2("Traits6", plr);
 		self.ar = self.traits:Get({});
-		do
-			local i = 0;
-			while i < #self.ar do
-				print(self.ar[i + 1]);
-				i = i + 1;
-			end;
-		end;
-		print("-----");
 		self:removeDuplicates();
 		self:set();
 	end;
@@ -35,6 +28,10 @@ do
 			return index == TS.array_indexOf(self, elem);
 		end);
 	end;
+	function buildData:toString()
+		local str = "Player: " .. self.player.Name .. "\nTraits: " .. TS.array_toString(self.ar);
+		return str;
+	end;
 	function buildData:addTraits(...)
 		local traits = { ... };
 		do
@@ -42,6 +39,21 @@ do
 			while i < #traits do
 				local _0 = self.ar;
 				_0[#_0 + 1] = traits[i + 1];
+				warn("Giving player " .. self.player.Name .. " the trait " .. traits[i + 1]);
+				i = i + 1;
+			end;
+		end;
+		self:removeDuplicates();
+		self:set();
+	end;
+	function buildData:removeTraits(...)
+		local traits = { ... };
+		do
+			local i = 0;
+			while i < #traits do
+				local _0 = self.ar;
+				_0[#_0 + 1] = traits[i + 1];
+				warn("Giving player " .. self.player.Name .. " the trait " .. traits[i + 1]);
 				i = i + 1;
 			end;
 		end;
@@ -54,6 +66,7 @@ do
 	function buildData:getTraits()
 		return self.ar;
 	end;
+	function buildData:__tostring() return self:toString(); end;
 end;
 exports.default = buildData;
 return exports;

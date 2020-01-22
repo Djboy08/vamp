@@ -3,30 +3,21 @@ import * as races from "shared/races"
 import { buildRace } from "shared/buildRace";
 import { Workspace, Players, ReplicatedStorage } from "@rbxts/services";
 import DataStore2 = require("@rbxts/datastore2");
-import buildData from "shared/data"
+import buildData from "shared/DataBuild"
+import raceManager from "shared/raceManager";
 
 type RaceNames = Exclude<keyof typeof races, "isPerson">;
+type AnyRace = ReturnType<typeof races[keyof typeof races]>;
 
 Players.PlayerAdded.Connect(plr => {
     const DataBuild = new buildData(plr);
     // dataStore.Set(ar2);
-    type AnyRace = ReturnType<typeof races[keyof typeof races]>;
 
     plr.CharacterAdded.Connect((char: Model) => {
         const race = buildRace<Array<RaceNames>>(plr, ...DataBuild.getTraits()) as AnyRace;
+        warn(DataBuild.toString())
+        const race_manager = new raceManager({race, player: plr});
 
-        if("punch" in race){
-            race.punch()
-        }
-        if("feed" in race){
-            race.feed()
-        }
-        if("compulse" in race){
-            race.compulse(char);
-        } 
-        if("heal" in race){
-            race.heal();
-        }
 
         let traitsModel = Workspace.FindFirstChild("Traits");
         if(traitsModel){

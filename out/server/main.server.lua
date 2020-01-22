@@ -1,28 +1,22 @@
 -- Compiled with https://roblox-ts.github.io v0.2.14
--- January 21, 2020, 7:09 PM Eastern Standard Time
+-- January 21, 2020, 11:12 PM Eastern Standard Time
 
 local TS = require(game:GetService("ReplicatedStorage"):WaitForChild("rbxts_include"):WaitForChild("RuntimeLib"));
 local races = TS.import(game:GetService("ReplicatedStorage"), "TS", "races");
 local buildRace = TS.import(game:GetService("ReplicatedStorage"), "TS", "buildRace").buildRace;
 local _0 = TS.import(TS.getModule("services"));
 local Workspace, Players = _0.Workspace, _0.Players;
-local buildData = TS.import(game:GetService("ReplicatedStorage"), "TS", "data").default;
+local buildData = TS.import(game:GetService("ReplicatedStorage"), "TS", "DataBuild").default;
+local raceManager = TS.import(game:GetService("ReplicatedStorage"), "TS", "raceManager").default;
 Players.PlayerAdded:Connect(function(plr)
 	local DataBuild = buildData.new(plr);
 	plr.CharacterAdded:Connect(function(char)
 		local race = buildRace(plr, unpack(DataBuild:getTraits()));
-		if race["punch"] ~= nil then
-			race:punch();
-		end;
-		if race["feed"] ~= nil then
-			race:feed();
-		end;
-		if race["compulse"] ~= nil then
-			race:compulse(char);
-		end;
-		if race["heal"] ~= nil then
-			race:heal();
-		end;
+		warn(DataBuild:toString());
+		local race_manager = raceManager.new({
+			race = race;
+			player = plr;
+		});
 		local traitsModel = Workspace:FindFirstChild("Traits");
 		if traitsModel then
 			local children = traitsModel:GetChildren();
