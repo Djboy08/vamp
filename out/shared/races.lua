@@ -1,5 +1,5 @@
 -- Compiled with https://roblox-ts.github.io v0.3.0
--- January 22, 2020, 5:28 AM Eastern Standard Time
+-- January 22, 2020, 6:07 AM Eastern Standard Time
 
 local TS = require(game:GetService("ReplicatedStorage"):WaitForChild("rbxts_include"):WaitForChild("RuntimeLib"));
 local exports = {};
@@ -29,6 +29,12 @@ local isPerson = function(_0)
 end;
 local isCompulser = function(_0)
 	local player = _0.player;
+	if player.Character then
+		local humanoid = player.Character:FindFirstChildOfClass("Humanoid");
+		if humanoid then
+			humanoid.WalkSpeed = 60;
+		end;
+	end;
 	local _1 = {};
 	function _1:compulse(npc)
 		print("You have just compulsed " .. npc.Name);

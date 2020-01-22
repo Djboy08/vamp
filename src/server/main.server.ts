@@ -28,8 +28,17 @@ Players.PlayerAdded.Connect(plr => {
         warn(DataBuild.toString())
         const race_manager = new raceManager({race, player: plr});
 
+
+
+        //Manages them reloading if they die.
+        let humanoid = char.FindFirstChildOfClass("Humanoid");
+        if(humanoid){
+            humanoid.Died.Connect(()=>{
+                plr.LoadCharacter();
+            })
+        }
     })
-    
+
     plr.LoadCharacter();
 });
 

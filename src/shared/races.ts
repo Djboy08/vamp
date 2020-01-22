@@ -26,6 +26,12 @@ export const isPerson = ({player, remote} : {player: Player, remote: NetServerEv
 
 export const isCompulser =  ({player} : {player: Player}) => {
     //init stuff here
+    if(player.Character){
+        let humanoid = player.Character.FindFirstChildOfClass("Humanoid");
+        if(humanoid){
+            humanoid.WalkSpeed = 60;
+        }
+    }
     return ({compulse(npc: Model) {
         print(`You have just compulsed ${npc.Name}`)
     }
