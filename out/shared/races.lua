@@ -1,5 +1,5 @@
 -- Compiled with https://roblox-ts.github.io v0.2.14
--- January 21, 2020, 6:05 PM Eastern Standard Time
+-- January 21, 2020, 7:03 PM Eastern Standard Time
 
 local TS = require(game:GetService("ReplicatedStorage"):WaitForChild("rbxts_include"):WaitForChild("RuntimeLib"));
 local exports = {};
@@ -37,7 +37,7 @@ end;
 local isRegenerator = function()
 	local _0 = {};
 	function _0:heal()
-		print("PUNCHED!");
+		print("HEALED!!");
 	end;
 	return _0;
 end;

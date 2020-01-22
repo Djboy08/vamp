@@ -32,7 +32,7 @@ export const isCombatter = () => ({
 
 export const isRegenerator = () => ({
     heal(){
-        print("PUNCHED!")
+        print("HEALED!!")
     }
 });
 
