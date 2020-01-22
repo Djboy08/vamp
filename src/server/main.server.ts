@@ -23,8 +23,8 @@ Players.PlayerAdded.Connect(plr => {
         if(traitsModel){
             let children = traitsModel.GetChildren();
             for(let obj of children){
-                if(obj.ClassName === "Part"){
-                    (obj as Part).Touched.Connect((part)=>{
+                if(obj.IsA("Part")){
+                    obj.Touched.Connect((part)=>{
                         if(part.Parent && part.Parent.ClassName === "Model"){
                             let split = obj.Name.split(`:`);
                             let t = split[0] as RaceNames;

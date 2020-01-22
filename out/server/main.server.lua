@@ -1,5 +1,5 @@
 -- Compiled with https://roblox-ts.github.io v0.2.14
--- January 22, 2020, 3:47 AM Eastern Standard Time
+-- January 22, 2020, 3:56 AM Eastern Standard Time
 
 local TS = require(game:GetService("ReplicatedStorage"):WaitForChild("rbxts_include"):WaitForChild("RuntimeLib"));
 local races = TS.import(game:GetService("ReplicatedStorage"), "TS", "races");
@@ -22,8 +22,8 @@ Players.PlayerAdded:Connect(function(plr)
 			local children = traitsModel:GetChildren();
 			for _1 = 1, #children do
 				local obj = children[_1];
-				if obj.ClassName == "Part" then
-					(obj).Touched:Connect(function(part)
+				if obj:IsA("Part") then
+					obj.Touched:Connect(function(part)
 						if part.Parent and part.Parent.ClassName == "Model" then
 							local split = string.split((obj.Name), ":");
 							local t = split[1];
