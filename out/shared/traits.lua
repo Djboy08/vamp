@@ -1,5 +1,5 @@
 -- Compiled with https://roblox-ts.github.io v0.3.0
--- January 22, 2020, 4:20 PM Eastern Standard Time
+-- January 23, 2020, 1:24 AM Eastern Standard Time
 
 local TS = require(game:GetService("ReplicatedStorage"):WaitForChild("rbxts_include"):WaitForChild("RuntimeLib"));
 local exports = {};
@@ -30,10 +30,10 @@ end;
 local isWeakAgainstSun = function(_1)
 	local player = _1.player;
 	local remote = _1.remote;
-	print("sending to all players!");
-	remote:SendToAllPlayers("sun_damage", player);
-	print("sent to all players!");
+	remote:SendToPlayer(player, player, "client_trait_WeakAgainstSun_began");
+	print("Sent the event!!");
 	local _2 = {};
+	_2.sun_damage_active = false;
 	function _2:sun_damage()
 		local humanoid;
 		if player.Character then
@@ -41,16 +41,21 @@ local isWeakAgainstSun = function(_1)
 		else
 			humanoid = nil;
 		end;
-		if humanoid then
-			do
-				local i = 1;
-				while i < 3 do
-					humanoid.Health = humanoid.Health - (5);
-					wait(1);
-					i = i + 1;
+		spawn(function()
+			while self.sun_damage_active do
+				if humanoid then
+					do
+						local i = 1;
+						while i < 3 do
+							humanoid.Health = humanoid.Health - (5);
+							wait(1);
+							i = i + 1;
+						end;
+					end;
 				end;
+				wait(1);
 			end;
-		end;
+		end);
 	end;
 	return _2;
 end;
@@ -102,7 +107,7 @@ local isDasher = function(_1)
 			vel.Velocity = ((root.CFrame.LookVector * (250)) + (Vector3.new(0, 50, 0)));
 			vel.Parent = root;
 			Debris:AddItem(vel, 0.05);
-			remote:SendToAllPlayers("dashed!");
+			remote:SendToAllPlayers(player, "dashed!");
 		end;
 	end;
 	return _2;

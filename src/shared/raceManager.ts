@@ -3,6 +3,9 @@ import * as races from "shared/traits"
 import buildData from "shared/DataBuild"
 import Net from "@rbxts/net";
 import inspect from "@rbxts/inspect"
+
+import movesManager from "shared/movesManager"
+
 type RaceNames = Exclude<keyof typeof races, "isPerson">;
 type AnyRace = ReturnType<typeof races[keyof typeof races]>;
 export interface UserGameData {
@@ -11,19 +14,12 @@ export interface UserGameData {
 }
 const remote = new Net.ServerEvent("movesEvent");
 
-export default class raceManager {
+export default class raceManager extends movesManager {
 
     public static mapping: Map<string, UserGameData> = new Map<string, UserGameData>();
     // public moveManager: raceMoves;
     constructor(){
-        remote.Connect((plr: Player, ...[msg])=>{
-            const UserData = raceManager.mapping.get(tostring(plr.UserId)) as UserGameData;
-            if(msg === 'dash' && "dash" in UserData.race){
-                UserData.race.dash();
-            }else if(msg === 'sun_damage' && 'sun_damage' in UserData.race){
-                UserData.race.sun_damage();
-            }
-        })
+        super(remote, false, raceManager.mapping);
     }
 
     public add({race, player, DataBuild}: {race: AnyRace, player: Player, DataBuild: buildData}){

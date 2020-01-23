@@ -1,13 +1,16 @@
 -- Compiled with https://roblox-ts.github.io v0.3.0
--- January 22, 2020, 4:35 PM Eastern Standard Time
+-- January 23, 2020, 1:36 AM Eastern Standard Time
 
 local TS = require(game:GetService("ReplicatedStorage"):WaitForChild("rbxts_include"):WaitForChild("RuntimeLib"));
 local exports = {};
 local raceManager;
 local Net = TS.import(script, TS.getModule(script, "net").out);
+local movesManager = TS.import(script, game:GetService("ReplicatedStorage"), "TS", "movesManager").default;
 local remote = Net.ServerEvent.new("movesEvent");
 do
+	local super = movesManager;
 	raceManager = setmetatable({}, {
+		__index = super;
 		__tostring = function() return "raceManager" end;
 	});
 	raceManager.__index = raceManager;
@@ -17,16 +20,7 @@ do
 		return self;
 	end;
 	function raceManager:constructor()
-		remote:Connect(function(plr, ...)
-			local _0 = { ... };
-			local msg = _0[1];
-			local UserData = raceManager.mapping[tostring(plr.UserId)];
-			if (msg == 'dash') and (UserData.race["dash"] ~= nil) then
-				UserData.race:dash();
-			elseif (msg == 'sun_damage') and (UserData.race['sun_damage'] ~= nil) then
-				UserData.race:sun_damage();
-			end;
-		end);
+		super.constructor(self, remote, false, raceManager.mapping);
 	end;
 	function raceManager:add(_0)
 		local race = _0.race;

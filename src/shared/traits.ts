@@ -26,20 +26,24 @@ export const isPerson = ({player, remote} : {player: Player, remote: NetServerEv
 
 
 export const isWeakAgainstSun =  ({player, remote} : {player: Player, remote: NetServerEvent}) => {
-    //init stuff here
-    // wait(1)
-    print("sending to all players!")
-    remote.SendToAllPlayers("sun_damage", player);
-    print("sent to all players!")
-    return ({sun_damage() {
-        let humanoid = player.Character ? player.Character.FindFirstChildOfClass("Humanoid") : undefined;
-        if(humanoid){
-            for(let i = 1; i < 3; i++){
-                humanoid.Health -= 5;
-                wait(1);
-            }
+    remote.SendToPlayer(player, player, "client_trait_WeakAgainstSun_began");
+    print("Sent the event!!");
+    return ({
+        sun_damage_active: false,
+        sun_damage() {
+            let humanoid = player.Character ? player.Character.FindFirstChildOfClass("Humanoid") : undefined;
+            spawn(()=>{
+                while(this.sun_damage_active){
+                    if(humanoid){
+                        for(let i = 1; i < 3; i++){
+                            humanoid.Health -= 5;
+                            wait(1);
+                        }
+                    }
+                    wait(1);
+                }
+            })
         }
-    }
 })};
 
 export const isCompulser =  ({player} : {player: Player}) => {
@@ -82,7 +86,7 @@ export const isDasher = ({player, remote}: {player: Player, remote: NetServerEve
                 vel.Velocity = root.CFrame.LookVector.mul(250).add(new Vector3(0,50,0));
                 vel.Parent = root;
                 Debris.AddItem(vel, 0.05);
-                remote.SendToAllPlayers("dashed!");
+                remote.SendToAllPlayers(player, "dashed!");
             }
         }
     });
