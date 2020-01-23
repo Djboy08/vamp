@@ -1,8 +1,8 @@
 import { Workspace, Players, ReplicatedStorage } from "@rbxts/services";
 import DataStore2 = require("@rbxts/datastore2");
-import * as races from "shared/traits"
+import * as traits from "shared/traits"
 import { getRaceTraits } from "shared/races";
-type RaceNames = Exclude<keyof typeof races, "isPerson">;
+type RaceNames = Exclude<keyof typeof traits, "isPerson">;
 
 interface Data {
     traits: Array<RaceNames>;

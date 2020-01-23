@@ -1,16 +1,17 @@
 import { Workspace, Players, ReplicatedStorage } from "@rbxts/services";
 import DataStore2 = require("@rbxts/datastore2");
-import * as races from "shared/traits"
+import * as traits from "shared/traits"
 
-type RaceNames = Exclude<keyof typeof races, "isPerson">;
-type AnyRace = ReturnType<typeof races[keyof typeof races]>;
+type RaceNames = Exclude<keyof typeof traits, "isPerson">;
+type AnyRace = ReturnType<typeof traits[keyof typeof traits]>;
 
-type isPerson = ReturnType<typeof races.isPerson>;
+type isPerson = ReturnType<typeof traits.isPerson>;
 
-type isCompulser = ReturnType<typeof races.isCompulser> & isPerson;
-type isCombatter = ReturnType<typeof races.isCombatter> & isPerson;
-type isRegenerator = ReturnType<typeof races.isRegenerator> & isPerson;
-type isFeeder = ReturnType<typeof races.isFeeder> & isPerson;
+type isCompulser = ReturnType<typeof traits.isCompulser> & isPerson;
+type isCombatter = ReturnType<typeof traits.isCombatter> & isPerson;
+type isRegenerator = ReturnType<typeof traits.isRegenerator> & isPerson;
+type isFeeder = ReturnType<typeof traits.isFeeder> & isPerson;
+
 interface Map {
     [key: string] : (race: any) => void;
 }

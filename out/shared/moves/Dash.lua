@@ -1,5 +1,5 @@
 -- Compiled with https://roblox-ts.github.io v0.3.0
--- January 23, 2020, 1:36 AM Eastern Standard Time
+-- January 23, 2020, 2:02 AM Eastern Standard Time
 
 local exports = {};
 local server_trait_Dash_began = {};

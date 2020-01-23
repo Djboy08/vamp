@@ -1,16 +1,16 @@
 import { Workspace, Players, ReplicatedStorage } from "@rbxts/services";
-import * as races from "shared/traits"
+import * as traits from "shared/traits"
 import buildData from "shared/DataBuild"
 import Net from "@rbxts/net";
 import inspect from "@rbxts/inspect"
 
 import movesManager from "shared/movesManager"
 
-type RaceNames = Exclude<keyof typeof races, "isPerson">;
-type AnyRace = ReturnType<typeof races[keyof typeof races]>;
+type RaceNames = Exclude<keyof typeof traits, "isPerson">;
+type AnyTrait = ReturnType<typeof traits[keyof typeof traits]>;
 export interface UserGameData {
     db: buildData;
-    race: AnyRace;
+    race: AnyTrait;
 }
 const remote = new Net.ServerEvent("movesEvent");
 
@@ -22,7 +22,7 @@ export default class raceManager extends movesManager {
         super(remote, false, raceManager.mapping);
     }
 
-    public add({race, player, DataBuild}: {race: AnyRace, player: Player, DataBuild: buildData}){
+    public add({race, player, DataBuild}: {race: AnyTrait, player: Player, DataBuild: buildData}){
         raceManager.mapping.set(tostring(player.UserId), {db: DataBuild, race});
     }
 

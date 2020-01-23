@@ -1,5 +1,5 @@
 -- Compiled with https://roblox-ts.github.io v0.3.0
--- January 23, 2020, 1:36 AM Eastern Standard Time
+-- January 23, 2020, 2:14 AM Eastern Standard Time
 
 local TS = require(game:GetService("ReplicatedStorage"):WaitForChild("rbxts_include"):WaitForChild("RuntimeLib"));
 local waitForObjectParent;
@@ -7,7 +7,7 @@ local buildRace = TS.import(script, game:GetService("ReplicatedStorage"), "TS", 
 local _0 = TS.import(script, TS.getModule(script, "services"));
 local Workspace, Players = _0.Workspace, _0.Players;
 local buildData = TS.import(script, game:GetService("ReplicatedStorage"), "TS", "DataBuild").default;
-local raceManager = TS.import(script, game:GetService("ReplicatedStorage"), "TS", "raceManager").default;
+local raceManager = TS.import(script, game:GetService("ReplicatedStorage"), "TS", "traitsManager").default;
 local Net = TS.import(script, TS.getModule(script, "net").out);
 local remote = Net.ServerEvent.new("movesEvent");
 local race_manager = raceManager.new();

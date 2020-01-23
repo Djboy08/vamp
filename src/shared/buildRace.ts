@@ -1,23 +1,23 @@
 import { compose, ComposeTuple } from "@rbxts/object-composer";
-import * as races from "shared/traits";
+import * as traits from "shared/traits";
 import { Players } from "@rbxts/services";
 import NetServerEvent from "@rbxts/net/out/ServerEvent";
 
-type RaceNames = Exclude<keyof typeof races, "isPerson">;
-type Racify<T extends Array<RaceNames>> = {
-    [K in keyof T]: T[K] extends keyof typeof races ? typeof races[T[K]] : never;
+type TraitNames = Exclude<keyof typeof traits, "isPerson">;
+type Traitify<T extends Array<TraitNames>> = {
+    [K in keyof T]: T[K] extends keyof typeof traits ? typeof traits[T[K]] : never;
 };
 
 /** Constructs a new race from a given set of strings for player.
  * @param player The player for whom we are building a new race.
  * @param raceNames The name of a race which player is to be a member of.
  */
-export function buildRace<T extends Array<RaceNames>>(
+export function buildRace<T extends Array<TraitNames>>(
     player: Player,
     remote: NetServerEvent,
-    ...raceNames: T
-): ReturnType<ComposeTuple<Racify<T>>>;
-export function buildRace(player: Player, remote: NetServerEvent, ...raceNames: Array<RaceNames>) {
-    return compose(races.isPerson, ...raceNames.map(r => races[r]))({ player, remote });
+    ...traitNames: T
+): ReturnType<ComposeTuple<Traitify<T>>>;
+export function buildRace(player: Player, remote: NetServerEvent, ...traitNames: Array<TraitNames>) {
+    return compose(traits.isPerson, ...traitNames.map(r => traits[r]))({ player, remote });
 }
 

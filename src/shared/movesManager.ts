@@ -1,5 +1,5 @@
 import { Workspace, Players, ReplicatedStorage, Lighting, TweenService } from "@rbxts/services";
-import * as races from "shared/traits"
+import * as traits from "shared/traits"
 import buildData from "shared/DataBuild"
 import Net from "@rbxts/net";
 import inspect from "@rbxts/inspect"

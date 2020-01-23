@@ -1,5 +1,5 @@
 import { Workspace, Players, ReplicatedStorage, Lighting, TweenService } from "@rbxts/services";
-import * as races from "shared/traits"
+import * as traits from "shared/traits"
 import buildData from "shared/DataBuild"
 import Net from "@rbxts/net";
 import inspect from "@rbxts/inspect"
@@ -9,10 +9,10 @@ import NetServerEvent from "@rbxts/net/out/ServerEvent";
 
 export interface UserGameData {
     db: buildData;
-    race: AnyRace;
+    race: AnyTrait;
 }
-type RaceNames = Exclude<keyof typeof races, "isPerson">;
-type AnyRace = ReturnType<typeof races[keyof typeof races]>;
+type TraitNames = Exclude<keyof typeof traits, "isPerson">;
+type AnyTrait = ReturnType<typeof traits[keyof typeof traits]>;
 
 export const client_trait_WeakAgainstSun_began: move = {
     init(plr: Player, remote: NetClientEvent){
