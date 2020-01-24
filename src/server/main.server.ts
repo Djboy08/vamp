@@ -1,11 +1,16 @@
 import * as traits from "shared/traits"
 import { buildRace } from "shared/buildRace";
-import { Workspace, Players, ReplicatedStorage } from "@rbxts/services";
+import { Workspace, Players, ReplicatedStorage, CollectionService } from "@rbxts/services";
 import buildData from "shared/DataBuild"
 import raceManager from "shared/traitsManager";
 import Net from "@rbxts/net";
 import inspect from "@rbxts/inspect"
+import { setRagdoll } from "shared/setRagdoll"
 
+// const sharedd = require(ReplicatedStorage.FindFirstChild("shared")!.FindFirstChild("luaonly")!.FindFirstChild("Ragdoll")! as ModuleScript);
+// if(sharedd && "Ragdoll" in sharedd){
+//     sharedd.Ragdoll()
+// }
 
 type TraitNames = Exclude<keyof typeof traits, "isPerson">;
 type AnyTrait = ReturnType<typeof traits[keyof typeof traits]>;
@@ -23,14 +28,23 @@ Players.PlayerAdded.Connect(plr => {
         // mapping.set(tostring(plr.UserId), {db: DataBuild, race});
         warn(DataBuild.toString())
         
-        
-
         //Manages them reloading if they die.
-        let humanoid = char.FindFirstChildOfClass("Humanoid");
+        let humanoid = char.FindFirstChildOfClass("Humanoid")!;
         if(humanoid){
-            humanoid.Died.Connect(()=>{
+            let connection = humanoid.HealthChanged.Connect((health: number)=>{
+                if(health < 20){
+                    // setRagdoll(humanoid, true);
+                    print(`${plr.Name} HP has changed to ${health}`);
+                    remote.SendToPlayer(plr, plr, "client_helper_Ragdoll_true");
+                }
+            })
+            let connection2: RBXScriptConnection;
+            connection2 = humanoid.Died.Connect(()=>{
                 race_manager.delete({player: plr});
                 plr.LoadCharacter();
+                humanoid.Destroy();
+                connection.Disconnect()
+                connection2.Disconnect();
             })
         }
     })
@@ -56,17 +70,23 @@ if(traitsModel){
                     let split = obj.Name.split(`:`);
                     let t = split[0] as TraitNames;
                     let P = Players.GetPlayerFromCharacter(part.Parent) as Player;
-                    switch(split[1]){
-                        case "add":
-                            print("Adding")
-                            raceManager.mapping.get(tostring(P.UserId))?.db.addTraits(t)
-                            P.LoadCharacter();
-                            break;
-                        case "rem":
-                            print("removing")
-                            raceManager.mapping.get(tostring(P.UserId))?.db.removeTraits(t)
-                            P.LoadCharacter();
-                            break;
+                    if(P){
+                        let humanoid = P.Character ? P.Character.FindFirstChildOfClass("Humanoid") as Humanoid : undefined;
+                        let User = raceManager.mapping.get(tostring(P.UserId));
+                        if(User){
+                            switch(split[1]){
+                                case "add":
+                                    print("Adding")
+                                    User.db.addTraits(t)
+                                    if(humanoid) humanoid.Health = 0;
+                                    break;
+                                case "rem":
+                                    print("removing")
+                                    User.db.removeTraits(t)
+                                    if(humanoid) humanoid.Health = 0;
+                                    break;
+                            }
+                        }
                     }
                 }
             })

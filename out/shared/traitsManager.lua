@@ -1,5 +1,5 @@
 -- Compiled with https://roblox-ts.github.io v0.3.0
--- January 23, 2020, 2:10 AM Eastern Standard Time
+-- January 24, 2020, 5:13 PM Eastern Standard Time
 
 local TS = require(game:GetService("ReplicatedStorage"):WaitForChild("rbxts_include"):WaitForChild("RuntimeLib"));
 local exports = {};
@@ -20,7 +20,7 @@ do
 		return self;
 	end;
 	function raceManager:constructor()
-		super.constructor(self, remote, false, raceManager.mapping);
+		super.constructor(self, remote, raceManager.mapping);
 	end;
 	function raceManager:add(_0)
 		local race = _0.race;

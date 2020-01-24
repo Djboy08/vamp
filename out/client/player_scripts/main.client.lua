@@ -1,9 +1,9 @@
 -- Compiled with https://roblox-ts.github.io v0.3.0
--- January 23, 2020, 2:02 AM Eastern Standard Time
+-- January 24, 2020, 5:13 PM Eastern Standard Time
 
 local TS = require(game:GetService("ReplicatedStorage"):WaitForChild("rbxts_include"):WaitForChild("RuntimeLib"));
 local Net = TS.import(script, TS.getModule(script, "net").out);
 local inspect = TS.import(script, TS.getModule(script, "inspect").inspect);
 local moveManager = TS.import(script, game:GetService("ReplicatedStorage"), "TS", "movesManager").default;
 local remote = Net.ClientEvent.new("movesEvent");
-local moves_manager = moveManager.new(remote, true);
+local moves_manager = moveManager.new(remote);

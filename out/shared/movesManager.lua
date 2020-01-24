@@ -1,8 +1,9 @@
 -- Compiled with https://roblox-ts.github.io v0.3.0
--- January 23, 2020, 2:02 AM Eastern Standard Time
+-- January 24, 2020, 5:13 PM Eastern Standard Time
 
 local TS = require(game:GetService("ReplicatedStorage"):WaitForChild("rbxts_include"):WaitForChild("RuntimeLib"));
 local exports = {};
+local RunService = TS.import(script, TS.getModule(script, "services")).RunService;
 local moves = TS.import(script, game:GetService("ReplicatedStorage"), "TS", "moves");
 local movesManager;
 do
@@ -15,9 +16,9 @@ do
 		self:constructor(...);
 		return self;
 	end;
-	function movesManager:constructor(remote, isLocal, mapping)
+	function movesManager:constructor(remote, mapping)
 		self.remote = remote;
-		if isLocal then
+		if RunService:IsClient() then
 			self.remote = self.remote;
 			self.remote:Connect(function(plr, msg)
 				self:startMove(msg, plr);
@@ -34,11 +35,15 @@ do
 		end;
 	end;
 	function movesManager:startMove(move, plr, mapping)
+		print(move);
 		if moves[move] then
-			if mapping then
-				moves[move]:init(plr, self.remote, mapping);
-			else
-				moves[move]:init(plr, self.remote);
+			if (tick() - moves[move].tick) > moves[move].cooldown then
+				moves[move].tick = tick();
+				if mapping then
+					moves[move]:init(plr, self.remote, mapping);
+				else
+					moves[move]:init(plr, self.remote);
+				end;
 			end;
 		else
 			warn(move .. " does not exist in moves");

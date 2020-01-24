@@ -6,7 +6,7 @@ import moveManager from "shared/movesManager"
 let remote = new Net.ClientEvent("movesEvent");
 
 
-const moves_manager = new moveManager(remote, true);
+const moves_manager = new moveManager(remote);
 
 
 

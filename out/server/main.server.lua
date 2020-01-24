@@ -1,5 +1,5 @@
 -- Compiled with https://roblox-ts.github.io v0.3.0
--- January 23, 2020, 2:14 AM Eastern Standard Time
+-- January 24, 2020, 5:13 PM Eastern Standard Time
 
 local TS = require(game:GetService("ReplicatedStorage"):WaitForChild("rbxts_include"):WaitForChild("RuntimeLib"));
 local waitForObjectParent;
@@ -24,11 +24,21 @@ Players.PlayerAdded:Connect(function(plr)
 		warn(DataBuild:toString());
 		local humanoid = char:FindFirstChildOfClass("Humanoid");
 		if humanoid then
-			humanoid.Died:Connect(function()
+			local connection = humanoid.HealthChanged:Connect(function(health)
+				if health < 20 then
+					print(plr.Name .. " HP has changed to " .. tostring(health));
+					remote:SendToPlayer(plr, plr, "client_helper_Ragdoll_true");
+				end;
+			end);
+			local connection2;
+			connection2 = humanoid.Died:Connect(function()
 				race_manager:delete({
 					player = plr;
 				});
 				plr:LoadCharacter();
+				humanoid:Destroy();
+				connection:Disconnect();
+				connection2:Disconnect();
 			end);
 		end;
 	end);
@@ -50,21 +60,36 @@ if traitsModel then
 					local split = string.split((obj.Name), ":");
 					local t = split[1];
 					local P = Players:GetPlayerFromCharacter(part.Parent);
-					local _2 = split[2];
-					repeat
-						if _2 == "add" then
-							print("Adding");
-							raceManager.mapping[tostring(P.UserId)].db:addTraits(t);
-							P:LoadCharacter();
-							break;
+					if P then
+						local humanoid;
+						if P.Character then
+							humanoid = P.Character:FindFirstChildOfClass("Humanoid");
+						else
+							humanoid = nil;
 						end;
-						if _2 == "rem" then
-							print("removing");
-							raceManager.mapping[tostring(P.UserId)].db:removeTraits(t);
-							P:LoadCharacter();
-							break;
+						local User = raceManager.mapping[tostring(P.UserId)];
+						if User then
+							local _2 = split[2];
+							repeat
+								if _2 == "add" then
+									print("Adding");
+									User.db:addTraits(t);
+									if humanoid then
+										humanoid.Health = 0;
+									end;
+									break;
+								end;
+								if _2 == "rem" then
+									print("removing");
+									User.db:removeTraits(t);
+									if humanoid then
+										humanoid.Health = 0;
+									end;
+									break;
+								end;
+							until true;
 						end;
-					until true;
+					end;
 				end;
 			end);
 		end;
