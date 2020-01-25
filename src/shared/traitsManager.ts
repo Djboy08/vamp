@@ -11,33 +11,33 @@ type RaceNames = Exclude<keyof typeof traits, "isPerson">;
 type AnyTrait = ReturnType<typeof traits[keyof typeof traits]>;
 const remote = new Net.ServerEvent("movesEvent");
 
-export default class raceManager extends movesManager {
+export default class traitManager extends movesManager {
 
     public static mapping: Map<string, UserGameData> = new Map<string, UserGameData>();
     // public moveManager: raceMoves;
     constructor(){
-        super(remote, raceManager.mapping);
+        super(remote, traitManager.mapping);
     }
 
     public add({race, player, DataBuild}: {race: AnyTrait, player: Player, DataBuild: buildData}){
-        raceManager.mapping.set(tostring(player.UserId), {db: DataBuild, race});
+        traitManager.mapping.set(tostring(player.UserId), {db: DataBuild, race});
     }
 
     public delete({player}: {player: Player}){
-        raceManager.mapping.delete(tostring(player.UserId));
+        traitManager.mapping.delete(tostring(player.UserId));
     }
 }
-
-
 
 
 // CHECK SKILLTREE PSUDO STUFF BELOW
         //left = what you need to unlock right
 // function checkSkillTree(){
-//     let x = [   ['A','B'],
-//                 ['C','B'],
-//                 ['D','B'],
-//                 ['F','A']];
+//     let x = [   
+//         ['Blacksmithing','Ironsmithing'],
+//         ['C','B'],
+//         ['D','B'],
+//         ['F','A']
+// ];
 //     let finding = 'A';
 //     let have = ['A','C','D', 'F'];
 //     for(let i = 0; i < x.size(); i++){

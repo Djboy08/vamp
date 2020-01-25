@@ -2,7 +2,7 @@ import * as traits from "shared/traits"
 import { buildRace } from "shared/buildRace";
 import { Workspace, Players, ReplicatedStorage, CollectionService } from "@rbxts/services";
 import buildData from "shared/DataBuild"
-import raceManager from "shared/traitsManager";
+import traitManager from "shared/traitsManager";
 import Net from "@rbxts/net";
 import inspect from "@rbxts/inspect"
 import { setRagdoll } from "shared/setRagdoll"
@@ -17,14 +17,14 @@ type AnyTrait = ReturnType<typeof traits[keyof typeof traits]>;
 
 
 const remote = new Net.ServerEvent("movesEvent");
-const race_manager = new raceManager();
+const trait_manager = new traitManager();
 
 Players.PlayerAdded.Connect(plr => {
     const DataBuild = new buildData(plr);
     plr.CharacterAdded.Connect((char: Model) => {
         waitForObjectParent(char, plr)
         const race: AnyTrait = buildRace<Array<TraitNames>>(plr, remote, ...DataBuild.combineTraitsAndRace()) as AnyTrait;
-        race_manager.add({race, player: plr, DataBuild});
+        trait_manager.add({race, player: plr, DataBuild});
         // mapping.set(tostring(plr.UserId), {db: DataBuild, race});
         warn(DataBuild.toString())
         
@@ -40,7 +40,7 @@ Players.PlayerAdded.Connect(plr => {
             })
             let connection2: RBXScriptConnection;
             connection2 = humanoid.Died.Connect(()=>{
-                race_manager.delete({player: plr});
+                trait_manager.delete({player: plr});
                 plr.LoadCharacter();
                 humanoid.Destroy();
                 connection.Disconnect()
@@ -72,7 +72,7 @@ if(traitsModel){
                     let P = Players.GetPlayerFromCharacter(part.Parent) as Player;
                     if(P){
                         let humanoid = P.Character ? P.Character.FindFirstChildOfClass("Humanoid") as Humanoid : undefined;
-                        let User = raceManager.mapping.get(tostring(P.UserId));
+                        let User = traitManager.mapping.get(tostring(P.UserId));
                         if(User){
                             switch(split[1]){
                                 case "add":

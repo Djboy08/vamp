@@ -1,5 +1,5 @@
 -- Compiled with https://roblox-ts.github.io v0.3.0
--- January 24, 2020, 5:13 PM Eastern Standard Time
+-- January 24, 2020, 9:03 PM Eastern Standard Time
 
 local TS = require(game:GetService("ReplicatedStorage"):WaitForChild("rbxts_include"):WaitForChild("RuntimeLib"));
 local waitForObjectParent;
@@ -7,16 +7,16 @@ local buildRace = TS.import(script, game:GetService("ReplicatedStorage"), "TS", 
 local _0 = TS.import(script, TS.getModule(script, "services"));
 local Workspace, Players = _0.Workspace, _0.Players;
 local buildData = TS.import(script, game:GetService("ReplicatedStorage"), "TS", "DataBuild").default;
-local raceManager = TS.import(script, game:GetService("ReplicatedStorage"), "TS", "traitsManager").default;
+local traitManager = TS.import(script, game:GetService("ReplicatedStorage"), "TS", "traitsManager").default;
 local Net = TS.import(script, TS.getModule(script, "net").out);
 local remote = Net.ServerEvent.new("movesEvent");
-local race_manager = raceManager.new();
+local trait_manager = traitManager.new();
 Players.PlayerAdded:Connect(function(plr)
 	local DataBuild = buildData.new(plr);
 	plr.CharacterAdded:Connect(function(char)
 		waitForObjectParent(char, plr);
 		local race = buildRace(plr, remote, unpack(DataBuild:combineTraitsAndRace()));
-		race_manager:add({
+		trait_manager:add({
 			race = race;
 			player = plr;
 			DataBuild = DataBuild;
@@ -32,7 +32,7 @@ Players.PlayerAdded:Connect(function(plr)
 			end);
 			local connection2;
 			connection2 = humanoid.Died:Connect(function()
-				race_manager:delete({
+				trait_manager:delete({
 					player = plr;
 				});
 				plr:LoadCharacter();
@@ -67,7 +67,7 @@ if traitsModel then
 						else
 							humanoid = nil;
 						end;
-						local User = raceManager.mapping[tostring(P.UserId)];
+						local User = traitManager.mapping[tostring(P.UserId)];
 						if User then
 							local _2 = split[2];
 							repeat

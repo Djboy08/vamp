@@ -1,42 +1,42 @@
 -- Compiled with https://roblox-ts.github.io v0.3.0
--- January 24, 2020, 5:13 PM Eastern Standard Time
+-- January 24, 2020, 9:03 PM Eastern Standard Time
 
 local TS = require(game:GetService("ReplicatedStorage"):WaitForChild("rbxts_include"):WaitForChild("RuntimeLib"));
 local exports = {};
-local raceManager;
+local traitManager;
 local Net = TS.import(script, TS.getModule(script, "net").out);
 local movesManager = TS.import(script, game:GetService("ReplicatedStorage"), "TS", "movesManager").default;
 local remote = Net.ServerEvent.new("movesEvent");
 do
 	local super = movesManager;
-	raceManager = setmetatable({}, {
+	traitManager = setmetatable({}, {
 		__index = super;
-		__tostring = function() return "raceManager" end;
+		__tostring = function() return "traitManager" end;
 	});
-	raceManager.__index = raceManager;
-	function raceManager.new(...)
-		local self = setmetatable({}, raceManager);
+	traitManager.__index = traitManager;
+	function traitManager.new(...)
+		local self = setmetatable({}, traitManager);
 		self:constructor(...);
 		return self;
 	end;
-	function raceManager:constructor()
-		super.constructor(self, remote, raceManager.mapping);
+	function traitManager:constructor()
+		super.constructor(self, remote, traitManager.mapping);
 	end;
-	function raceManager:add(_0)
+	function traitManager:add(_0)
 		local race = _0.race;
 		local player = _0.player;
 		local DataBuild = _0.DataBuild;
-		local _1 = raceManager.mapping;
+		local _1 = traitManager.mapping;
 		_1[tostring(player.UserId)] = {
 			db = DataBuild;
 			race = race;
 		};
 	end;
-	function raceManager:delete(_0)
+	function traitManager:delete(_0)
 		local player = _0.player;
-		raceManager.mapping[tostring(player.UserId)] = nil;
+		traitManager.mapping[tostring(player.UserId)] = nil;
 	end;
-	raceManager.mapping = {};
+	traitManager.mapping = {};
 end;
-exports.default = raceManager;
+exports.default = traitManager;
 return exports;
