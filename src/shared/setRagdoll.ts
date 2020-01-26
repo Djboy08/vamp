@@ -4,7 +4,7 @@ import { Workspace, Players, ReplicatedStorage } from "@rbxts/services";
 export const setRagdoll = (humanoid: Humanoid, setRagdoll: boolean) => {
 
     if(humanoid){
-        let state = setRagdoll ? Enum.HumanoidStateType.Physics : Enum.HumanoidStateType.Physics;
+        let state = setRagdoll ? Enum.HumanoidStateType.Physics : Enum.HumanoidStateType.GettingUp;
         humanoid.ChangeState(state);
     }
 

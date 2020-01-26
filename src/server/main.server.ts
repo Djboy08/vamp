@@ -32,8 +32,10 @@ Players.PlayerAdded.Connect(plr => {
         let humanoid = char.FindFirstChildOfClass("Humanoid")!;
         if(humanoid){
             let connection = humanoid.HealthChanged.Connect((health: number)=>{
-                if(health < 20){
+                if(health < 50){
                     remote.SendToPlayer(plr, plr, "client_helper_Ragdoll_true", char);
+                }else{
+                    remote.SendToPlayer(plr, plr, "client_helper_Ragdoll_false", char);
                 }
             })
             let connection2: RBXScriptConnection;

@@ -1,5 +1,5 @@
 -- Compiled with https://roblox-ts.github.io v0.3.0
--- January 26, 2020, 3:24 AM Eastern Standard Time
+-- January 26, 2020, 3:31 AM Eastern Standard Time
 
 local TS = require(game:GetService("ReplicatedStorage"):WaitForChild("rbxts_include"):WaitForChild("RuntimeLib"));
 local exports = {};
@@ -13,7 +13,6 @@ function client_helper_Ragdoll_true:init(_0)
 	local mapping = _0.mapping;
 	local char = _0.char;
 	if char and (char:FindFirstChildOfClass("Humanoid")) then
-		print(char);
 		local humanoid = char:FindFirstChildOfClass("Humanoid");
 		setRagdoll(humanoid, true);
 	end;
@@ -26,8 +25,8 @@ function client_helper_Ragdoll_false:init(_0)
 	local remote = _0.remote;
 	local mapping = _0.mapping;
 	local char = _0.char;
-	if plr and (plr.Character) and (plr.Character:FindFirstChildOfClass("Humanoid")) then
-		local humanoid = plr.Character:FindFirstChildOfClass("Humanoid");
+	if char and (char:FindFirstChildOfClass("Humanoid")) then
+		local humanoid = char:FindFirstChildOfClass("Humanoid");
 		setRagdoll(humanoid, false);
 	end;
 end;
