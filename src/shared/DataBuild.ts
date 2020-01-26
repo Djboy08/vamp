@@ -11,28 +11,40 @@ interface Data {
 }
 
 export default class buildData {
-    public dataDS: DataStore2<Data>;
-    public player: Player;
+    public dataDS: DataStore2<Data> | undefined;
+    public player?: Player;
+    public character?: Model;
 
     public data: Data;
 
-    constructor(plr: Player){
-        this.player = plr;
-        this.dataDS = DataStore2<Data>("Data6", plr);
-        let d = this.dataDS.Get({
+    constructor({plr, char}: {plr?: Player, char?: Model}){
+        this.dataDS = undefined;
+        this.data = {
             traits: [],
             skills: [],
-            race: "Vampire"
-        });
-
-        this.data = {
-            traits: d.traits,
-            skills: d.skills,
-            race: d.race
+            race: ""
         }
 
-        this.removeDuplicates();
-        this.set();
+        if(plr){
+            this.player = plr;
+            this.dataDS = DataStore2<Data>("Data7", plr);
+            let d = this.dataDS.Get({
+                traits: [],
+                skills: [],
+                race: "Human"
+            });
+    
+            this.data = {
+                traits: d.traits,
+                skills: d.skills,
+                race: d.race
+            }
+    
+            this.removeDuplicates();
+            this.set();
+        }else if(char){
+            
+        }
     }
 
     removeDuplicates(){
@@ -41,7 +53,7 @@ export default class buildData {
     }
     // @OVERRIDE
     toString(){
-        let str: string = `Player: ${this.player.Name}
+        let str: string = `Player: ${this.player}
 Traits: ${this.data.traits.toString()}
 Skills: ${this.data.skills.toString()}
 Race:   "${this.data.race}"
@@ -55,7 +67,7 @@ CombinedTraits: ${this.combineTraitsAndRace().toString()}`;
             print(`is ${traits[i]} in their traits? = ${temp_set.has(traits[i])}`)
             if(!temp_set.has(traits[i])){
                 this.data.traits.push(traits[i]);
-                warn(`Giving player ${this.player.Name} the trait ${traits[i]}`)
+                warn(`Giving player ${this.player} the trait ${traits[i]}`)
             }else{
                 // error(`Player ${this.player.Name} Already has this trait!`);
             }
@@ -78,12 +90,14 @@ CombinedTraits: ${this.combineTraitsAndRace().toString()}`;
         this.set();
     }
     set(){
-        this.data = {
-            traits: this.data.traits,
-            skills: this.data.skills,
-            race: this.data.race
+        if(this.dataDS){
+            this.data = {
+                traits: this.data.traits,
+                skills: this.data.skills,
+                race: this.data.race
+            }
+            this.dataDS.Set(this.data);
         }
-        this.dataDS.Set(this.data);
     }
     
     getTraits(): Array<RaceNames> {
@@ -98,7 +112,7 @@ CombinedTraits: ${this.combineTraitsAndRace().toString()}`;
             let new_traits = [...new Set(race_traits.concat(this.getTraits()))];
             return new_traits;
         }else{
-            return [];
+            return this.getTraits();
         }
     }
 }

@@ -20,7 +20,7 @@ const remote = new Net.ServerEvent("movesEvent");
 const trait_manager = new traitManager();
 
 Players.PlayerAdded.Connect(plr => {
-    const DataBuild = new buildData(plr);
+    const DataBuild = new buildData({plr});
     plr.CharacterAdded.Connect((char: Model) => {
         waitForObjectParent(char, plr)
         const race: AnyTrait = buildRace<Array<TraitNames>>(plr, remote, ...DataBuild.combineTraitsAndRace()) as AnyTrait;

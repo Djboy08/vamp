@@ -1,5 +1,5 @@
 -- Compiled with https://roblox-ts.github.io v0.3.0
--- January 26, 2020, 1:27 AM Eastern Standard Time
+-- January 26, 2020, 2:42 AM Eastern Standard Time
 
 local TS = require(game:GetService("ReplicatedStorage"):WaitForChild("rbxts_include"):WaitForChild("RuntimeLib"));
 local exports = {};
@@ -18,11 +18,11 @@ do
 	end;
 	function buildData:constructor(plr)
 		self.player = plr;
-		self.dataDS = DataStore2("Data6", plr);
+		self.dataDS = DataStore2("Data7", plr);
 		local d = self.dataDS:Get({
 			traits = {};
 			skills = {};
-			race = "Vampire";
+			race = "Human";
 		});
 		self.data = {
 			traits = d.traits;
@@ -39,7 +39,7 @@ do
 		self.data.skills = TS.set_values(_1);
 	end;
 	function buildData:toString()
-		local str = "Player: " .. self.player.Name .. "\
+		local str = "Player: " .. tostring(self.player) .. "\
 Traits: " .. TS.array_toString(self.data.traits) .. "\
 Skills: " .. TS.array_toString(self.data.skills) .. "\
 Race:   \"" .. self.data.race .. "\"\
@@ -56,7 +56,7 @@ CombinedTraits: " .. TS.array_toString(self:combineTraitsAndRace());
 				if not (temp_set[traits[i + 1]] ~= nil) then
 					local _0 = self.data.traits;
 					_0[#_0 + 1] = traits[i + 1];
-					warn("Giving player " .. self.player.Name .. " the trait " .. traits[i + 1]);
+					warn("Giving player " .. tostring(self.player) .. " the trait " .. traits[i + 1]);
 				else
 				end;
 				i = i + 1;
@@ -103,7 +103,7 @@ CombinedTraits: " .. TS.array_toString(self:combineTraitsAndRace());
 			local new_traits = TS.set_values(_0);
 			return new_traits;
 		else
-			return {};
+			return self:getTraits();
 		end;
 	end;
 	function buildData:__tostring() return self:toString(); end;
