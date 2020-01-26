@@ -18,7 +18,7 @@ type AnyTrait = ReturnType<typeof traits[keyof typeof traits]>;
 export const client_trait_WeakAgainstSun_began: move = {
     cooldown: 15,
     tick: 0,
-    init(plr: Player, remote: NetClientEvent){
+    init({plr, remote, mapping, char}: {plr: Player, remote: NetClientEvent, mapping?: Map<string, UserGameData>, char? :Model}){
         let status = false;
         if(plr !== Players.LocalPlayer) return;
 
@@ -49,7 +49,7 @@ export const client_trait_WeakAgainstSun_began: move = {
 export const client_helper_Ragdoll_true: move = {
     cooldown: 2,
     tick: 0,
-    init(plr: Player, remote: NetClientEvent){
+    init({plr, remote, mapping, char}: {plr: Player, remote: NetClientEvent, mapping?: Map<string, UserGameData>, char? :Model}){
         
         if(plr && plr.Character && plr.Character.FindFirstChildOfClass("Humanoid") ){
             const humanoid = plr.Character.FindFirstChildOfClass("Humanoid") as Humanoid;
@@ -60,7 +60,7 @@ export const client_helper_Ragdoll_true: move = {
 export const client_helper_Ragdoll_false: move = {
     cooldown: 2,
     tick: 0,
-    init(plr: Player, remote: NetClientEvent){
+    init({plr, remote, mapping, char}: {plr: Player, remote: NetClientEvent, mapping?: Map<string, UserGameData>, char? :Model}){
         
         if(plr && plr.Character && plr.Character.FindFirstChildOfClass("Humanoid") ){
             const humanoid = plr.Character.FindFirstChildOfClass("Humanoid") as Humanoid;
@@ -73,7 +73,7 @@ export const client_helper_Ragdoll_false: move = {
 export const client_trait_WeakAgainstSun_addfire: move = {
     cooldown: 0,
     tick: 0,
-    init(plr: Player, remote: NetClientEvent){
+    init({plr, remote, mapping, char}: {plr: Player, remote: NetClientEvent, mapping?: Map<string, UserGameData>, char? :Model}){
         let asset = (ReplicatedStorage.FindFirstChild("Fire") as ParticleEmitter).Clone();
         let root = plr.Character ? plr.Character.FindFirstChild("HumanoidRootPart") : undefined;
         if(root && root.FindFirstChild("Fire")){
@@ -96,7 +96,7 @@ export const client_trait_WeakAgainstSun_addfire: move = {
 export const server_trait_WeakAgainstSun_addfire: move = {
     cooldown: 0,
     tick: 0,
-    init(plr: Player, remote: NetServerEvent, mapping?: Map<string, UserGameData>){
+    init({plr, remote, mapping, char}: {plr: Player, remote: NetServerEvent, mapping?: Map<string, UserGameData>, char? :Model}){
         if(mapping){
             const UserData = mapping.get(tostring(plr.UserId)) as UserGameData;
             if("sun_damage" in UserData.race && !UserData.race.sun_damage_active){
@@ -111,7 +111,7 @@ export const server_trait_WeakAgainstSun_addfire: move = {
 export const server_trait_WeakAgainstSun_deletefire: move = {
     cooldown: 0,
     tick: 0,
-    init(plr: Player, remote: NetServerEvent, mapping?: Map<string, UserGameData>){
+    init({plr, remote, mapping, char}: {plr: Player, remote: NetServerEvent, mapping?: Map<string, UserGameData>, char? :Model}){
         if(mapping){
             const UserData = mapping.get(tostring(plr.UserId)) as UserGameData;
             if("sun_damage_active" in UserData.race && UserData.race.sun_damage_active){
@@ -125,7 +125,7 @@ export const server_trait_WeakAgainstSun_deletefire: move = {
 export const client_trait_WeakAgainstSun_deletefire: move = {
     cooldown: 0,
     tick: 0,
-    init(plr: Player, remote: NetClientEvent){
+    init({plr, remote, mapping, char}: {plr: Player, remote: NetClientEvent, mapping?: Map<string, UserGameData>, char? :Model}){
         let asset = (ReplicatedStorage.FindFirstChild("Fire") as ParticleEmitter).Clone();
         let root = plr.Character ? plr.Character.FindFirstChild("HumanoidRootPart") : undefined;
         if(root && root.FindFirstChild("Fire")){

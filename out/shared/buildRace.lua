@@ -1,5 +1,5 @@
 -- Compiled with https://roblox-ts.github.io v0.3.0
--- January 23, 2020, 6:50 PM Eastern Standard Time
+-- January 26, 2020, 1:27 AM Eastern Standard Time
 
 local TS = require(game:GetService("ReplicatedStorage"):WaitForChild("rbxts_include"):WaitForChild("RuntimeLib"));
 local exports = {};

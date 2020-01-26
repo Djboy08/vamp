@@ -23,7 +23,7 @@ export interface UserGameData {
 // }
 
 export interface move {
-    init(plr: Player, remote: NetClientEvent | NetServerEvent, mapping?: Map<string, UserGameData>): void;
+    init({plr, remote, mapping, char}: {plr: Player, remote: NetClientEvent | NetServerEvent, mapping?: Map<string, UserGameData>, char?: Model}): void;
     cooldown: number;
     tick: number; // The tick() when the move started
 }

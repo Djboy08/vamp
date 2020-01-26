@@ -1,5 +1,5 @@
 -- Compiled with https://roblox-ts.github.io v0.3.0
--- January 24, 2020, 9:03 PM Eastern Standard Time
+-- January 26, 2020, 1:46 AM Eastern Standard Time
 
 local TS = require(game:GetService("ReplicatedStorage"):WaitForChild("rbxts_include"):WaitForChild("RuntimeLib"));
 local exports = {};
@@ -20,8 +20,12 @@ do
 		self.remote = remote;
 		if RunService:IsClient() then
 			self.remote = self.remote;
-			self.remote:Connect(function(plr, msg)
-				self:startMove(msg, plr);
+			self.remote:Connect(function(plr, msg, char)
+				self:startMove({
+					move = msg;
+					plr = plr;
+					char = char;
+				});
 			end);
 		else
 			if mapping then
@@ -29,20 +33,40 @@ do
 				self.remote:Connect(function(plr, ...)
 					local _0 = { ... };
 					local msg = _0[1];
-					self:startMove(msg, plr, mapping);
+					local char = _0[2];
+					self:startMove({
+						move = msg;
+						plr = plr;
+						mapping = mapping;
+						char = char;
+					});
 				end);
 			end;
 		end;
 	end;
-	function movesManager:startMove(move, plr, mapping)
+	function movesManager:startMove(_0)
+		local move = _0.move;
+		local plr = _0.plr;
+		local mapping = _0.mapping;
+		local char = _0.char;
 		print(move);
 		if moves[move] then
 			if (tick() - moves[move].tick) > moves[move].cooldown then
 				moves[move].tick = tick();
 				if mapping then
-					moves[move]:init(plr, self.remote, mapping);
+					moves[move]:init({
+						plr = plr;
+						remote = self.remote;
+						mapping = mapping;
+						char = char;
+					});
 				else
-					moves[move]:init(plr, self.remote);
+					moves[move]:init({
+						plr = plr;
+						remote = self.remote;
+						mapping = mapping;
+						char = char;
+					});
 				end;
 			end;
 		else

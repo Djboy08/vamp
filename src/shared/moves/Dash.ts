@@ -12,7 +12,7 @@ import NetServerEvent from "@rbxts/net/out/ServerEvent";
 export const server_trait_Dash_began: move = {
     cooldown: 1,
     tick: 0,
-    init(plr: Player, remote: NetServerEvent, mapping?: Map<string, UserGameData>){
+    init({plr, remote, mapping, char}: {plr: Player, remote: NetServerEvent, mapping?: Map<string, UserGameData>, char? :Model}){
         if(mapping){
             const UserData = mapping.get(tostring(plr.UserId)) as UserGameData;
             if("dash" in UserData.race){

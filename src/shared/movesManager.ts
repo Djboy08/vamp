@@ -20,31 +20,31 @@ export default class movesManager {
         this.remote = remote;
         if(RunService.IsClient()){
             this.remote = this.remote as NetClientEvent;
-            this.remote.Connect((plr: Player, msg: Moves)=>{
-                this.startMove(msg, plr);
+            this.remote.Connect((plr: Player, msg: Moves, char?: Model)=>{
+                this.startMove({move: msg, plr, char});
             });
         }else{
             if(mapping){
                 this.remote = remote as NetServerEvent;
-                this.remote.Connect((plr: Player, ...[msg])=>{
-                    this.startMove(msg as Moves, plr, mapping);
+                this.remote.Connect((plr: Player, ...[msg, char])=>{
+                    this.startMove({move: msg as Moves, plr, mapping, char: char as Model});
                 });
             }
         }
 
     }
-    
-    startMove(move: Moves, plr: Player, mapping?: Map<string, UserGameData>){
+    startMove({move, plr, mapping, char}: {move: Moves, plr: Player, mapping?: Map<string, UserGameData>, char?: Model}){
+    // startMove(move: Moves, plr: Player, mapping?: Map<string, UserGameData>){
         print(move);
         if(moves[move]){
             if( (tick() - moves[move].tick) > moves[move].cooldown){
                 moves[move].tick = tick();
                 if(mapping){
                     //server
-                    moves[move].init(plr, this.remote, mapping);
+                    moves[move].init({plr, remote: this.remote, mapping, char});
                 }else{
                     //client
-                    moves[move].init(plr, this.remote);
+                    moves[move].init({plr, remote: this.remote, mapping, char});
                 }
             }
         }else{

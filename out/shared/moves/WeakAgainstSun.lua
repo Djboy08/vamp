@@ -1,5 +1,5 @@
 -- Compiled with https://roblox-ts.github.io v0.3.0
--- January 24, 2020, 9:03 PM Eastern Standard Time
+-- January 26, 2020, 1:45 AM Eastern Standard Time
 
 local TS = require(game:GetService("ReplicatedStorage"):WaitForChild("rbxts_include"):WaitForChild("RuntimeLib"));
 local exports = {};
@@ -9,7 +9,11 @@ local setRagdoll = TS.import(script, game:GetService("ReplicatedStorage"), "TS",
 local client_trait_WeakAgainstSun_began = {};
 client_trait_WeakAgainstSun_began.cooldown = 15;
 client_trait_WeakAgainstSun_began.tick = 0;
-function client_trait_WeakAgainstSun_began:init(plr, remote)
+function client_trait_WeakAgainstSun_began:init(_1)
+	local plr = _1.plr;
+	local remote = _1.remote;
+	local mapping = _1.mapping;
+	local char = _1.char;
 	local status = false;
 	if plr ~= Players.LocalPlayer then
 		return nil;
@@ -24,14 +28,14 @@ function client_trait_WeakAgainstSun_began:init(plr, remote)
 		end;
 		if root and (root:IsA("BasePart")) then
 			local ray = Ray.new(root.Position, (sun_direction * (50)));
-			local _2 = ray;
-			local _1;
+			local _3 = ray;
+			local _2;
 			if root.Parent then
-				_1 = root.Parent:GetChildren();
+				_2 = root.Parent:GetChildren();
 			else
-				_1 = {};
+				_2 = {};
 			end;
-			local part = { Workspace:FindPartOnRayWithIgnoreList(_2, _1) };
+			local part = { Workspace:FindPartOnRayWithIgnoreList(_3, _2) };
 			if part[1] then
 				if status == true then
 					remote:SendToServer("server_trait_WeakAgainstSun_deletefire");
@@ -50,7 +54,11 @@ end;
 local client_helper_Ragdoll_true = {};
 client_helper_Ragdoll_true.cooldown = 2;
 client_helper_Ragdoll_true.tick = 0;
-function client_helper_Ragdoll_true:init(plr, remote)
+function client_helper_Ragdoll_true:init(_1)
+	local plr = _1.plr;
+	local remote = _1.remote;
+	local mapping = _1.mapping;
+	local char = _1.char;
 	if plr and (plr.Character) and (plr.Character:FindFirstChildOfClass("Humanoid")) then
 		local humanoid = plr.Character:FindFirstChildOfClass("Humanoid");
 		setRagdoll(humanoid, true);
@@ -59,7 +67,11 @@ end;
 local client_helper_Ragdoll_false = {};
 client_helper_Ragdoll_false.cooldown = 2;
 client_helper_Ragdoll_false.tick = 0;
-function client_helper_Ragdoll_false:init(plr, remote)
+function client_helper_Ragdoll_false:init(_1)
+	local plr = _1.plr;
+	local remote = _1.remote;
+	local mapping = _1.mapping;
+	local char = _1.char;
 	if plr and (plr.Character) and (plr.Character:FindFirstChildOfClass("Humanoid")) then
 		local humanoid = plr.Character:FindFirstChildOfClass("Humanoid");
 		setRagdoll(humanoid, false);
@@ -68,7 +80,11 @@ end;
 local client_trait_WeakAgainstSun_addfire = {};
 client_trait_WeakAgainstSun_addfire.cooldown = 0;
 client_trait_WeakAgainstSun_addfire.tick = 0;
-function client_trait_WeakAgainstSun_addfire:init(plr, remote)
+function client_trait_WeakAgainstSun_addfire:init(_1)
+	local plr = _1.plr;
+	local remote = _1.remote;
+	local mapping = _1.mapping;
+	local char = _1.char;
 	local asset = ReplicatedStorage:FindFirstChild("Fire"):Clone();
 	local root;
 	if plr.Character then
@@ -95,7 +111,11 @@ end;
 local server_trait_WeakAgainstSun_addfire = {};
 server_trait_WeakAgainstSun_addfire.cooldown = 0;
 server_trait_WeakAgainstSun_addfire.tick = 0;
-function server_trait_WeakAgainstSun_addfire:init(plr, remote, mapping)
+function server_trait_WeakAgainstSun_addfire:init(_1)
+	local plr = _1.plr;
+	local remote = _1.remote;
+	local mapping = _1.mapping;
+	local char = _1.char;
 	if mapping then
 		local UserData = mapping[tostring(plr.UserId)];
 		if (UserData.race["sun_damage"] ~= nil) and (not (UserData.race.sun_damage_active)) then
@@ -108,7 +128,11 @@ end;
 local server_trait_WeakAgainstSun_deletefire = {};
 server_trait_WeakAgainstSun_deletefire.cooldown = 0;
 server_trait_WeakAgainstSun_deletefire.tick = 0;
-function server_trait_WeakAgainstSun_deletefire:init(plr, remote, mapping)
+function server_trait_WeakAgainstSun_deletefire:init(_1)
+	local plr = _1.plr;
+	local remote = _1.remote;
+	local mapping = _1.mapping;
+	local char = _1.char;
 	if mapping then
 		local UserData = mapping[tostring(plr.UserId)];
 		if (UserData.race["sun_damage_active"] ~= nil) and (UserData.race.sun_damage_active) then
@@ -120,7 +144,11 @@ end;
 local client_trait_WeakAgainstSun_deletefire = {};
 client_trait_WeakAgainstSun_deletefire.cooldown = 0;
 client_trait_WeakAgainstSun_deletefire.tick = 0;
-function client_trait_WeakAgainstSun_deletefire:init(plr, remote)
+function client_trait_WeakAgainstSun_deletefire:init(_1)
+	local plr = _1.plr;
+	local remote = _1.remote;
+	local mapping = _1.mapping;
+	local char = _1.char;
 	local asset = ReplicatedStorage:FindFirstChild("Fire"):Clone();
 	local root;
 	if plr.Character then
