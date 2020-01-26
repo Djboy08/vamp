@@ -1,5 +1,5 @@
 -- Compiled with https://roblox-ts.github.io v0.3.0
--- January 26, 2020, 3:04 AM Eastern Standard Time
+-- January 26, 2020, 3:20 AM Eastern Standard Time
 
 local TS = require(game:GetService("ReplicatedStorage"):WaitForChild("rbxts_include"):WaitForChild("RuntimeLib"));
 local exports = {};
@@ -31,12 +31,14 @@ do
 				db = DataBuild;
 				race = race;
 			};
+		else
 		end;
 	end;
 	function traitManager:delete(_0)
 		local DataBuild = _0.DataBuild;
 		if DataBuild and (DataBuild.player) then
 			traitManager.mapping[tostring(DataBuild.player.UserId)] = nil;
+		else
 		end;
 	end;
 	traitManager.mapping = {};
