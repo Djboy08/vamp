@@ -24,7 +24,7 @@ Players.PlayerAdded.Connect(plr => {
     plr.CharacterAdded.Connect((char: Model) => {
         waitForObjectParent(char, plr)
         const race: AnyTrait = buildRace<Array<TraitNames>>(plr, remote, ...DataBuild.combineTraitsAndRace()) as AnyTrait;
-        trait_manager.add({race, player: plr, DataBuild});
+        trait_manager.add({race, DataBuild});
         // mapping.set(tostring(plr.UserId), {db: DataBuild, race});
         warn(DataBuild.toString())
         
@@ -38,7 +38,7 @@ Players.PlayerAdded.Connect(plr => {
             })
             let connection2: RBXScriptConnection;
             connection2 = humanoid.Died.Connect(()=>{
-                trait_manager.delete({player: plr});
+                trait_manager.delete({DataBuild});
                 plr.LoadCharacter();
                 humanoid.Destroy();
                 connection.Disconnect()

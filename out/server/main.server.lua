@@ -1,5 +1,5 @@
 -- Compiled with https://roblox-ts.github.io v0.3.0
--- January 26, 2020, 2:47 AM Eastern Standard Time
+-- January 26, 2020, 2:52 AM Eastern Standard Time
 
 local TS = require(game:GetService("ReplicatedStorage"):WaitForChild("rbxts_include"):WaitForChild("RuntimeLib"));
 local waitForObjectParent;
@@ -20,7 +20,6 @@ Players.PlayerAdded:Connect(function(plr)
 		local race = buildRace(plr, remote, unpack(DataBuild:combineTraitsAndRace()));
 		trait_manager:add({
 			race = race;
-			player = plr;
 			DataBuild = DataBuild;
 		});
 		warn(DataBuild:toString());
@@ -34,7 +33,7 @@ Players.PlayerAdded:Connect(function(plr)
 			local connection2;
 			connection2 = humanoid.Died:Connect(function()
 				trait_manager:delete({
-					player = plr;
+					DataBuild = DataBuild;
 				});
 				plr:LoadCharacter();
 				humanoid:Destroy();

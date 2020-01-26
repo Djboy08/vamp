@@ -19,12 +19,16 @@ export default class traitManager extends movesManager {
         super(remote, traitManager.mapping);
     }
 
-    public add({race, player, DataBuild}: {race: AnyTrait, player: Player, DataBuild: buildData}){
-        traitManager.mapping.set(tostring(player.UserId), {db: DataBuild, race});
+    public add({race, DataBuild}: {race: AnyTrait, DataBuild: buildData}){
+        if(DataBuild && DataBuild.player){
+            traitManager.mapping.set(tostring(DataBuild.player.UserId), {db: DataBuild, race});
+        }
     }
 
-    public delete({player}: {player: Player}){
-        traitManager.mapping.delete(tostring(player.UserId));
+    public delete({DataBuild}: {DataBuild: buildData}){
+        if(DataBuild && DataBuild.player){
+            traitManager.mapping.delete(tostring(DataBuild.player.UserId));
+        }
     }
 }
 
