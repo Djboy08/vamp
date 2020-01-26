@@ -1,5 +1,5 @@
 -- Compiled with https://roblox-ts.github.io v0.3.0
--- January 26, 2020, 1:46 AM Eastern Standard Time
+-- January 26, 2020, 2:30 AM Eastern Standard Time
 
 local TS = require(game:GetService("ReplicatedStorage"):WaitForChild("rbxts_include"):WaitForChild("RuntimeLib"));
 local waitForObjectParent;
@@ -26,8 +26,7 @@ Players.PlayerAdded:Connect(function(plr)
 		if humanoid then
 			local connection = humanoid.HealthChanged:Connect(function(health)
 				if health < 20 then
-					print(plr.Name .. " HP has changed to " .. tostring(health));
-					remote:SendToPlayer(plr, plr, "client_helper_Ragdoll_true");
+					remote:SendToPlayer(plr, plr, "client_helper_Ragdoll_true", char);
 				end;
 			end);
 			local connection2;

@@ -33,9 +33,7 @@ Players.PlayerAdded.Connect(plr => {
         if(humanoid){
             let connection = humanoid.HealthChanged.Connect((health: number)=>{
                 if(health < 20){
-                    // setRagdoll(humanoid, true);
-                    print(`${plr.Name} HP has changed to ${health}`);
-                    remote.SendToPlayer(plr, plr, "client_helper_Ragdoll_true");
+                    remote.SendToPlayer(plr, plr, "client_helper_Ragdoll_true", char);
                 }
             })
             let connection2: RBXScriptConnection;
