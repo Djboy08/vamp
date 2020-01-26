@@ -23,7 +23,7 @@ Players.PlayerAdded.Connect(plr => {
     const DataBuild = new buildData({plr});
     plr.CharacterAdded.Connect((char: Model) => {
         waitForObjectParent(char, plr)
-        const race: AnyTrait = buildRace<Array<TraitNames>>(plr, remote, ...DataBuild.combineTraitsAndRace()) as AnyTrait;
+        const race: AnyTrait = buildRace<Array<TraitNames>>(DataBuild, remote, ...DataBuild.combineTraitsAndRace()) as AnyTrait;
         trait_manager.add({race, DataBuild});
         // mapping.set(tostring(plr.UserId), {db: DataBuild, race});
         warn(DataBuild.toString())

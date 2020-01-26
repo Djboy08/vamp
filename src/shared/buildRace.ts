@@ -2,6 +2,7 @@ import { compose, ComposeTuple } from "@rbxts/object-composer";
 import * as traits from "shared/traits";
 import { Players } from "@rbxts/services";
 import NetServerEvent from "@rbxts/net/out/ServerEvent";
+import dataBuild from "./DataBuild";
 
 type TraitNames = Exclude<keyof typeof traits, "isPerson">;
 type Traitify<T extends Array<TraitNames>> = {
@@ -13,11 +14,11 @@ type Traitify<T extends Array<TraitNames>> = {
  * @param raceNames The name of a race which player is to be a member of.
  */
 export function buildRace<T extends Array<TraitNames>>(
-    player: Player,
+    DataBuild: dataBuild,
     remote: NetServerEvent,
     ...traitNames: T
 ): ReturnType<ComposeTuple<Traitify<T>>>;
-export function buildRace(player: Player, remote: NetServerEvent, ...traitNames: Array<TraitNames>) {
-    return compose(traits.isPerson, ...traitNames.map(r => traits[r]))({ player, remote });
+export function buildRace(DataBuild: dataBuild, remote: NetServerEvent, ...traitNames: Array<TraitNames>) {
+    return compose(traits.isPerson, ...traitNames.map(r => traits[r]))({ DataBuild, remote });
 }
 

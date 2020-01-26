@@ -1,5 +1,5 @@
 -- Compiled with https://roblox-ts.github.io v0.3.0
--- January 26, 2020, 2:52 AM Eastern Standard Time
+-- January 26, 2020, 3:04 AM Eastern Standard Time
 
 local TS = require(game:GetService("ReplicatedStorage"):WaitForChild("rbxts_include"):WaitForChild("RuntimeLib"));
 local waitForObjectParent;
@@ -17,7 +17,7 @@ Players.PlayerAdded:Connect(function(plr)
 	});
 	plr.CharacterAdded:Connect(function(char)
 		waitForObjectParent(char, plr);
-		local race = buildRace(plr, remote, unpack(DataBuild:combineTraitsAndRace()));
+		local race = buildRace(DataBuild, remote, unpack(DataBuild:combineTraitsAndRace()));
 		trait_manager:add({
 			race = race;
 			DataBuild = DataBuild;

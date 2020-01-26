@@ -5,17 +5,30 @@ if(plr.Character && plr.Character.FindFirstChildOfClass("Humanoid")){
     const char = plr.Character;
     const humanoid = char.FindFirstChildOfClass("Humanoid") as Humanoid;
     const LowerTorso = char.WaitForChild("LowerTorso");
+    const UpperTorso = char.WaitForChild("UpperTorso");
     const Root = LowerTorso.FindFirstChildOfClass("Motor6D");
-    if(LowerTorso.IsA("BasePart") && Root?.IsA("Motor6D") && humanoid.GetState() !== Enum.HumanoidStateType.Freefall){
-        const copy = Root.C1;
+    const Waist = UpperTorso.FindFirstChildOfClass("Motor6D");
+    if(LowerTorso.IsA("BasePart") 
+        && Root?.IsA("Motor6D") 
+        && humanoid.GetState() !== Enum.HumanoidStateType.Freefall
+        && UpperTorso.IsA("BasePart")
+        && Waist?.IsA("Motor6D")) {
+
+        const root_c1 = Root.C1;
+        const waist_c1 = Waist.C1;
         while(plr.Character){
             const yvel = (char.FindFirstChild("HumanoidRootPart") as BasePart)!.RotVelocity!.Y!;
             const tweeninfoo = new TweenInfo(0.1, Enum.EasingStyle.Linear, Enum.EasingDirection.Out, 0, false, 0);
             const properties: {[key: string]: CFrame} = {};
-            const CoordinateFrame = CFrame.Angles(0,0,(math.clamp(-math.rad(yvel)*3,-0.5,0.5)));
-            properties["C1"] = copy.mul(CoordinateFrame);
-            const tween = TweenService.Create(Root, tweeninfoo, properties)
-            tween.Play()
+            const val = (-math.rad(yvel)*3)/2;
+            const CoordinateFrame_root = CFrame.Angles(0,0,(math.clamp(val,-0.5,0.5)));
+            const CoordinateFrame_waist = CFrame.Angles(0,0,(math.clamp(val,-0.5,0.5)));
+            properties["C1"] = root_c1.mul(CoordinateFrame_root);
+            const tween_root = TweenService.Create(Root, tweeninfoo, properties)
+            properties["C1"] = waist_c1.mul(CoordinateFrame_waist);
+            const tween_waist = TweenService.Create(Waist, tweeninfoo, properties)
+            tween_root.Play()
+            tween_waist.Play()
             wait()
         }  
     }

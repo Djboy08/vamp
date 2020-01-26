@@ -1,5 +1,5 @@
 -- Compiled with https://roblox-ts.github.io v0.3.0
--- January 26, 2020, 2:42 AM Eastern Standard Time
+-- January 26, 2020, 3:04 AM Eastern Standard Time
 
 local TS = require(game:GetService("ReplicatedStorage"):WaitForChild("rbxts_include"):WaitForChild("RuntimeLib"));
 local exports = {};
@@ -16,21 +16,31 @@ do
 		self:constructor(...);
 		return self;
 	end;
-	function buildData:constructor(plr)
-		self.player = plr;
-		self.dataDS = DataStore2("Data7", plr);
-		local d = self.dataDS:Get({
+	function buildData:constructor(_0)
+		local plr = _0.plr;
+		local char = _0.char;
+		self.data = {
 			traits = {};
 			skills = {};
-			race = "Human";
-		});
-		self.data = {
-			traits = d.traits;
-			skills = d.skills;
-			race = d.race;
+			race = "";
 		};
-		self:removeDuplicates();
-		self:set();
+		if plr then
+			self.player = plr;
+			self.dataDS = DataStore2("Data7", plr);
+			local d = self.dataDS:Get({
+				traits = {};
+				skills = {};
+				race = "Human";
+			});
+			self.data = {
+				traits = d.traits;
+				skills = d.skills;
+				race = d.race;
+			};
+			self:removeDuplicates();
+			self:set();
+		elseif char then
+		end;
 	end;
 	function buildData:removeDuplicates()
 		local _0 = TS.set_new(self.data.traits);
@@ -82,12 +92,14 @@ CombinedTraits: " .. TS.array_toString(self:combineTraitsAndRace());
 		self:set();
 	end;
 	function buildData:set()
-		self.data = {
-			traits = self.data.traits;
-			skills = self.data.skills;
-			race = self.data.race;
-		};
-		self.dataDS:Set(self.data);
+		if self.dataDS then
+			self.data = {
+				traits = self.data.traits;
+				skills = self.data.skills;
+				race = self.data.race;
+			};
+			self.dataDS:Set(self.data);
+		end;
 	end;
 	function buildData:getTraits()
 		return self.data.traits;

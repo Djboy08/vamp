@@ -11,14 +11,13 @@ interface Data {
 }
 
 export default class buildData {
-    public dataDS: DataStore2<Data> | undefined;
+    public dataDS?: DataStore2<Data>;
     public player?: Player;
     public character?: Model;
 
     public data: Data;
 
     constructor({plr, char}: {plr?: Player, char?: Model}){
-        this.dataDS = undefined;
         this.data = {
             traits: [],
             skills: [],
