@@ -33,6 +33,7 @@ export default class movesManager {
         }
 
     }
+    // Eventually you need to build the NPC manager into this start move method.
     startMove({move, plr, mapping, char}: {move: Moves, plr: Player, mapping?: Map<string, UserGameData>, char?: Model}){
     // startMove(move: Moves, plr: Player, mapping?: Map<string, UserGameData>){
         print(move);
