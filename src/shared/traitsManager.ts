@@ -22,12 +22,20 @@ export default class traitManager extends movesManager {
     public add({race, DataBuild}: {race: AnyTrait, DataBuild: buildData}){
         if(DataBuild && DataBuild.player){
             traitManager.mapping.set(tostring(DataBuild.player.UserId), {db: DataBuild, race});
+        }else{
+            // this means it should be a NPC
+            // the key should be something unique that would be inside the humanoid of the NPC ( GUID? )
+            // traitManager.mapping.set(tostring(DataBuild.char.UniqueID), {db: DataBuild, race});
         }
     }
 
     public delete({DataBuild}: {DataBuild: buildData}){
         if(DataBuild && DataBuild.player){
             traitManager.mapping.delete(tostring(DataBuild.player.UserId));
+        }else{
+            // this means it should be a NPC
+            // the key should be something unique that would be inside the humanoid of the NPC ( GUID? )
+            // traitManager.mapping.delete(tostring(DataBuild.char.UniqueID));
         }
     }
 }
